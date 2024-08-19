@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="swengine.desktop/App.axaml" value="swengine.desktop/swengine.desktop.csproj" />
+        <entry key="swengine.desktop/Views/MainWindow.axaml" value="swengine.desktop/swengine.desktop.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
