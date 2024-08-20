@@ -1,20 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using swengine.desktop.Models;
+using swengine.desktop.Services;
 
 namespace swengine.desktop.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public List<int> DesignList
+    public MainWindowViewModel()
     {
-        get
-        {
-            List<int> temp = new();
-            for (int i = 0; i <= 15; i++)
-            {
-                temp.Add(i);
-            }
+        GetWallpapers();
+    }
+    private MotionBgsService _motionBgsService = new();
 
-            return temp;
-        }
+    [ObservableProperty] private List<WallpaperResponse> wallpaperResponses;
+   
+    
+    async void GetWallpapers()
+    {
+        WallpaperResponses = await _motionBgsService.Latest(Page: 1);
+        Debug.WriteLine(WallpaperResponses.Count);
+        Debug.WriteLine("testing function");
+       
     }
 }

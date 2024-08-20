@@ -1,10 +1,12 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:swengine.desktop.ViewModels"
+        xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="swengine.desktop.Views.MainWindow"
+        xmlns:models="using:swengine.desktop.Models"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="swengine.desktop">
@@ -34,14 +36,17 @@
             </StackPanel>
         <Border Grid.Row="2" Height="1" Background="Black" Margin="0,-10,0,0"></Border>
         <StackPanel Grid.Row="3">
-            <TextBlock>Latest Wallpapers</TextBlock>
-            <ItemsRepeater ItemsSource="{Binding DesignList}"  HorizontalAlignment="Center" Margin="0,-20,0,0">
+            <TextBlock>Latest Wallpddapers</TextBlock>
+            <ItemsRepeater ItemsSource="{Binding WallpaperResponses}"  HorizontalAlignment="Center" Margin="0,-20,0,0">
                 <ItemsRepeater.Layout>
                     <UniformGridLayout MinColumnSpacing="20"  />
                 </ItemsRepeater.Layout>
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate>
-                        <Image Source="/Assets/archbg.png" Height="300" Width="300" Margin="0,0,0,-100"></Image>
+                        <StackPanel>
+                             <Image asyncImageLoader:ImageLoader.Source="{Binding Thumbnail}" Height="300" Width="300" Margin="0,0,0,-100"></Image>
+                              <TextBlock Text="{Binding Title}" Margin="0,40,0,0" TextAlignment="Center"></TextBlock>
+                        </StackPanel>
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>
             </ItemsRepeater>
