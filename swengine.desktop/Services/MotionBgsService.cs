@@ -7,12 +7,25 @@ namespace swengine.desktop.Services;
 
 public class MotionBgsService : IBgsProvider
 {
-    public async Task<List<WallpaperResponse>> Latest(int Page)
+    public async Task<List<WallpaperResponse>> LatestAsync(int Page)
     {
         try
         {
             return JsonSerializer.Deserialize<List<WallpaperResponse>>(
-                    await Scrapers.MotionBgsScraper.Latest(Page));
+                    await Scrapers.MotionBgsScraper.LatestAsync(Page));
+        }
+        catch
+        {
+            return default;
+        }
+    }
+
+    public async Task<Wallpaper> InfoAsync(string Query, string Title = "")
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<Wallpaper>(
+                await Scrapers.MotionBgsScraper.InfoAsync(Query,Title));
         }
         catch
         {

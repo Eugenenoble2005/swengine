@@ -10,7 +10,7 @@ namespace swengine.desktop.Scrapers;
 
 public static class MotionBgsScraper
 {
-    public static async Task<string> Latest(int Page)
+    public static async Task<string> LatestAsync(int Page)
     {
         string url = $"https://motionbgs.com/hx2/latest/{Page}/";
         using (var http = new HttpClient())
@@ -38,6 +38,36 @@ public static class MotionBgsScraper
                 return JsonSerializer.Serialize(wallpaper_response);
             } 
         }
+        return default;
+    }
+
+    public static async Task<string> InfoAsync(string Query, string Title)
+    {
+        using (var http = new HttpClient())
+        {
+            var request = await http.GetAsync(Query);
+            if (request.IsSuccessStatusCode)
+            {
+                string response = await request.Content.ReadAsStringAsync();
+                HtmlDocument htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(response);
+
+                string source_tag = "https://www.motionbgs.com" + htmlDoc.DocumentNode.SelectSingleNode("//source[@type='video/mp4']")
+                    .GetAttributeValue("src", null);
+                string text_xs =
+                    htmlDoc.DocumentNode.SelectSingleNode("//div[@class='text-xs']").InnerHtml.Split(" ")[0];
+                return JsonSerializer.Serialize(
+                    new Wallpaper()
+                    {
+                        Title = Title,
+                        Resolution = text_xs,
+                        SourceFile = source_tag,
+                        WallpaperType = WallpaperType.Live,
+                    }
+                );
+            }
+        }
+
         return default;
     }
 }

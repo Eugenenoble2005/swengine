@@ -4,7 +4,9 @@
     <option name="projectPerEditor">
       <map>
         <entry key="swengine.desktop/App.axaml" value="swengine.desktop/swengine.desktop.csproj" />
+        <entry key="swengine.desktop/Views/ApplyWindow.axaml" value="swengine.desktop/swengine.desktop.csproj" />
         <entry key="swengine.desktop/Views/MainWindow.axaml" value="swengine.desktop/swengine.desktop.csproj" />
+        <entry key="swengine.desktop/Views/WallpaperListControl.axaml" value="swengine.desktop/swengine.desktop.csproj" />
       </map>
     </option>
   </component>

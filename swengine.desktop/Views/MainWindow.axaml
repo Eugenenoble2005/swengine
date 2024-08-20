@@ -43,9 +43,14 @@
                 </ItemsRepeater.Layout>
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel>
-                             <Image asyncImageLoader:ImageLoader.Source="{Binding Thumbnail}" Height="300" Width="300" Margin="0,0,0,-100"></Image>
-                              <TextBlock Text="{Binding Title}" Margin="0,40,0,0" TextAlignment="Center"></TextBlock>
+                        <StackPanel Height="200"  Margin="0,50,0,0" Tag="{Binding }" Tapped="OpenApplyWindow">
+                            <StackPanel.Styles>
+                                <Style Selector="StackPanel:pointerover">
+                                    <Setter Property="Background" Value="{DynamicResource SystemAccentColor}"></Setter>
+                                </Style>
+                            </StackPanel.Styles>
+                            <Image asyncImageLoader:ImageLoader.Source="{Binding Thumbnail}" Height="300" Width="300" VerticalAlignment="Top"></Image>
+                              <TextBlock Text="{Binding Title}" Margin="0,-120,0,0" TextAlignment="Center"></TextBlock>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>

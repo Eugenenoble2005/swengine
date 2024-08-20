@@ -16,12 +16,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private MotionBgsService _motionBgsService = new();
 
     [ObservableProperty] private List<WallpaperResponse> wallpaperResponses;
-   
     
     async void GetWallpapers()
     {
-        WallpaperResponses = await _motionBgsService.Latest(Page: 1);
-        Debug.WriteLine(WallpaperResponses.Count);
+        WallpaperResponses = await _motionBgsService.LatestAsync(Page: 1);
         Debug.WriteLine("testing function");
        
     }

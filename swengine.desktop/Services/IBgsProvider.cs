@@ -6,5 +6,6 @@ namespace swengine.desktop.Services;
 
 public interface IBgsProvider
 {
-    public Task<List<WallpaperResponse>> Latest(int Page);
+    public Task<List<WallpaperResponse>> LatestAsync(int Page);
+    public Task<Wallpaper> InfoAsync(string Query, string Title = "");
 }
