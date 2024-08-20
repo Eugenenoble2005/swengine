@@ -13,7 +13,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
 {
     public WallpaperResponse _wallpaperResponse;
     private MotionBgsService _motionBgsService = new();
-    private readonly LibVLC _libVlc = new LibVLC();
+    private readonly LibVLC _libVlc = new LibVLC("--input-repeat=2");
 
     public ApplyWindowViewModel()
     {
@@ -33,7 +33,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
     {
         //Debug.WriteLine(WallpaperResponse.Src);
         Wallpaper Wallpaper = await _motionBgsService.InfoAsync(WallpaperResponse.Src,Title:WallpaperResponse.Title);
-        using var media = new Media(_libVlc, new Uri(Wallpaper.SourceFile));
+        using var media = new Media(_libVlc, new Uri(Wallpaper.Preview));
         MediaPlayer.Play(media);
     }
 

@@ -7,13 +7,19 @@
         xmlns:vm="using:swengine.desktop.ViewModels"
         x:DataType="vm:ApplyWindowViewModel"
         xmlns:vlc="using:LibVLCSharp.Avalonia"
+        CanResize="False"
         WindowStartupLocation="CenterScreen"
         Title="ApplyWindow">
     <Design.DataContext>
         <vm:DesignApplyWindowViewModel/>
     </Design.DataContext>
-    <Grid RowDefinitions="Auto,Auto">
-        <TextBlock Grid.Row="0" Text="{Binding Wallpaper.Title}"></TextBlock>
-        <vlc:VideoView Grid.Row="1" HorizontalAlignment="Stretch" Height="400"  x:Name="video"/>
+    <Grid RowDefinitions="Auto,1">
+        <vlc:VideoView Grid.Row="0"  Height="600" VerticalAlignment="Stretch"  x:Name="video" Margin="0,0,0,0">
+            
+            <!-- <TextBlock Text="{Binding Wallpaper.Resolution}" HorizontalAlignment="Right"></TextBlock> -->
+        </vlc:VideoView>
+        <StackPanel Grid.Row="1">
+            <Button HorizontalAlignment="Center">Apply This Wallpaper</Button>
+        </StackPanel>
     </Grid>
 </Window>

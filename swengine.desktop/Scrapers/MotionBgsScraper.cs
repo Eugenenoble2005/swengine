@@ -61,7 +61,7 @@ public static class MotionBgsScraper
                     {
                         Title = Title,
                         Resolution = text_xs,
-                        SourceFile = source_tag,
+                        Preview = source_tag,
                         WallpaperType = WallpaperType.Live,
                     }
                 );

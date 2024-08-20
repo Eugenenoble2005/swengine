@@ -13,6 +13,7 @@ public class Wallpaper
     
     public string SourceFile { get; set; }
     
+    public string Preview { get; set; }
     public WallpaperType WallpaperType { get; set; }
     
     public string Resolution { get; set; }
