@@ -14,12 +14,12 @@
         <vm:DesignApplyWindowViewModel/>
     </Design.DataContext>
     <Grid RowDefinitions="Auto,1">
-        <vlc:VideoView Grid.Row="0"  Height="600" VerticalAlignment="Stretch"  x:Name="video" Margin="0,0,0,0">
+        <vlc:VideoView Grid.Row="0"  Height="500"  x:Name="video" Margin="0,0,0,0">
             
             <!-- <TextBlock Text="{Binding Wallpaper.Resolution}" HorizontalAlignment="Right"></TextBlock> -->
         </vlc:VideoView>
         <StackPanel Grid.Row="1">
-            <Button HorizontalAlignment="Center">Apply This Wallpaper</Button>
+            <Button HorizontalAlignment="Center" Command="{Binding ApplyWallpaper}">Apply This Wallpaper</Button>
         </StackPanel>
     </Grid>
 </Window>

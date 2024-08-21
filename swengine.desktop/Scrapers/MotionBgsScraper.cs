@@ -56,6 +56,8 @@ public static class MotionBgsScraper
                     .GetAttributeValue("src", null);
                 string text_xs =
                     htmlDoc.DocumentNode.SelectSingleNode("//div[@class='text-xs']").InnerHtml.Split(" ")[0];
+                string download = "https://www.motionbgs.com" + htmlDoc.DocumentNode.SelectSingleNode("//div[@class='download']")
+                    .SelectSingleNode(".//a").GetAttributeValue("href", null);
                 return JsonSerializer.Serialize(
                     new Wallpaper()
                     {
@@ -63,6 +65,7 @@ public static class MotionBgsScraper
                         Resolution = text_xs,
                         Preview = source_tag,
                         WallpaperType = WallpaperType.Live,
+                        DownloadLink = download
                     }
                 );
             }

@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LibVLCSharp.Shared;
+using swengine.desktop.Helpers;
 using swengine.desktop.Models;
 using swengine.desktop.Services;
 
@@ -11,7 +12,7 @@ namespace swengine.desktop.ViewModels;
 
 public partial class ApplyWindowViewModel : ViewModelBase
 {
-    public WallpaperResponse _wallpaperResponse;
+    private WallpaperResponse _wallpaperResponse;
     private MotionBgsService _motionBgsService = new();
     private readonly LibVLC _libVlc = new LibVLC("--input-repeat=2");
 
@@ -32,12 +33,20 @@ public partial class ApplyWindowViewModel : ViewModelBase
     public async void ObjectCreated()
     {
         //Debug.WriteLine(WallpaperResponse.Src);
-        Wallpaper Wallpaper = await _motionBgsService.InfoAsync(WallpaperResponse.Src,Title:WallpaperResponse.Title);
+         Wallpaper = await _motionBgsService.InfoAsync(WallpaperResponse.Src,Title:WallpaperResponse.Title);
         using var media = new Media(_libVlc, new Uri(Wallpaper.Preview));
         MediaPlayer.Play(media);
     }
 
-   
+    public async void ApplyWallpaper()
+    {
+        if (Wallpaper != null)
+        {
+            await DownloadHelper.DownloadAsync(Wallpaper.DownloadLink, Wallpaper.Title);
+            Debug.WriteLine("Download compelte");
+        }
+     
+    }
 }
 
 public class DesignApplyWindowViewModel : ApplyWindowViewModel

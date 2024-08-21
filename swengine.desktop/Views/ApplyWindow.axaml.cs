@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using LibVLCSharp.Avalonia;
 using swengine.desktop.ViewModels;
@@ -16,5 +17,17 @@ public partial class ApplyWindow : Window
             var datacontext = DataContext as ApplyWindowViewModel;
             video.MediaPlayer = datacontext.MediaPlayer;
         });
+        Closed += (sender, args) =>
+        {
+            //stop all players
+           ( DataContext as ApplyWindowViewModel).MediaPlayer.Stop();
+          
+        };
+    }
+
+    private void ApplyWallpaper(object? sender, RoutedEventArgs e)
+    {
+        var dataContext = DataContext as ApplyWindowViewModel;
+        
     }
 }
