@@ -42,8 +42,19 @@ public partial class ApplyWindowViewModel : ViewModelBase
     {
         if (Wallpaper != null)
         {
-            await DownloadHelper.DownloadAsync(Wallpaper.DownloadLink, Wallpaper.Title);
-            Debug.WriteLine("Download compelte");
+            Debug.WriteLine("Began Downloading Wallpaper");
+           bool downloadResult =  await DownloadHelper.DownloadAsync(Wallpaper.DownloadLink, Wallpaper.Title);
+           if (downloadResult)
+           {
+               Debug.WriteLine("Download complete. Began converting wallpaper");
+               //begin conversion with result of download
+               string prospectiveFile = Environment.GetEnvironmentVariable("HOME") +
+                                        "/Pictures/wallpapers/preconvert/" + Wallpaper.Title + ".mp4";
+             
+           await FfmpegHelper.ConvertAsync(prospectiveFile, 0, 5,
+               GifQuality.q1080p);
+           }
+            Debug.WriteLine("Application complete");
         }
      
     }
@@ -60,5 +71,6 @@ public class DesignApplyWindowViewModel : ApplyWindowViewModel
             WallpaperType = WallpaperType.Live,
             Resolution = "Resolution\":\"3840x2160"
         };
+        
     }
 }

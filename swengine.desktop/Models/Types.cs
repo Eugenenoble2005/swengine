@@ -25,3 +25,11 @@ public enum WallpaperType
     Live,
     Static,
 }
+
+public enum GifQuality
+{
+    q360p,
+    q480p,
+    q720p,
+    q1080p
+}
