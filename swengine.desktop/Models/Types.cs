@@ -31,5 +31,7 @@ public enum GifQuality
     q360p,
     q480p,
     q720p,
-    q1080p
+    q1080p,
+    q1440p,
+    q2160p,
 }

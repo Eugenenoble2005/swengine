@@ -17,7 +17,7 @@ public static class FfmpegHelper
             string home = Environment.GetEnvironmentVariable("HOME");
             string convertTo = home + "/Pictures/wallpapers/" + file.Split("/").Last().Split(".").First() + ".gif";
             string ffmpegArgs =
-                $"-ss {startAt} -t {endAt} -i \"{file}\" -vf \"scale=-1:{QualityParser(quality)},fps={fps}\" -loop 0 -y \"{convertTo}\"";
+                $"-ss {startAt} -t {endAt} -i \"{file}\" -vf \"scale=-1:{QualityParser(quality)}:flags=lanczos,fps={fps}\" -loop 0 -y \"{convertTo}\"";
             var convertProcess = new Process
             {
                 StartInfo = new()
@@ -71,6 +71,12 @@ public static class FfmpegHelper
                 break;
             case GifQuality.q1080p:
                 return "1080";
+                break;
+            case GifQuality.q1440p:
+                return "1440";
+                break;
+            case GifQuality.q2160p:
+                return "2160";
                 break;
             default:
                 return "1080";

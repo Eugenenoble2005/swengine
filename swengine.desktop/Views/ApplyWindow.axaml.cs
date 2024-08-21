@@ -15,7 +15,7 @@ public partial class ApplyWindow : Window
         video.Loaded += ((sender, args) =>
         {
             var datacontext = DataContext as ApplyWindowViewModel;
-            video.MediaPlayer = datacontext.MediaPlayer;
+           video.MediaPlayer = datacontext.MediaPlayer;
         });
         Closed += (sender, args) =>
         {
