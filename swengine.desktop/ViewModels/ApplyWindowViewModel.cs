@@ -25,7 +25,8 @@ public partial class ApplyWindowViewModel : ViewModelBase
     [ObservableProperty] private GifQuality selectedResolution = GifQuality.q2160p;
     [ObservableProperty] private string selectedFps = "60";
     [ObservableProperty] private bool isVideoVisible = true;
-    [ObservableProperty] private string applicationStatus;
+    //wrapping in a class so it can be passed by reference
+    [ObservableProperty] private ApplicationStatusWrapper applicationStatusWrapper = new();
     private readonly LibVLC _libVlc = new LibVLC("--input-repeat=2");
 
     public ApplyWindowViewModel()
@@ -67,6 +68,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
             IsVideoVisible = true;
         };
         var dialogResponse = await dialog.ShowAsync();
+        
         if (dialogResponse == ContentDialogResult.Primary)
         {
             dialog.Hide();
@@ -79,7 +81,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
             };
             applicationStatusDialog.Bind(ContentDialog.ContentProperty, new Binding()
             {
-                Path = "ApplicationStatus",
+                Path = "ApplicationStatusWrapper.Status",
                 Source = this,
                 Mode = BindingMode.TwoWay,
             });
@@ -87,17 +89,22 @@ public partial class ApplyWindowViewModel : ViewModelBase
             {
                 IsVideoVisible = true;
             };
-            applicationStatusDialog.ShowAsync();
             CancellationTokenSource ctx = new();
-            Task.Run(() =>
+            applicationStatusDialog.Opened += (sender, args) =>
             {
-                ApplyWallpaperAsync(ctx.Token);
-            });
+                Task.Run(() =>
+                {
+                    WallpaperHelper.ApplyWallpaperAsync(Wallpaper,  ApplicationStatusWrapper, SelectedResolution, SelectedFps,
+                        ctx.Token);
+                });
+            };
             applicationStatusDialog.Closed += (sender, args) =>
             {
                 Debug.WriteLine("Attempting to cancel");
                 ctx.Cancel();
             };
+            await applicationStatusDialog.ShowAsync();
+         
 
         }
       
@@ -135,61 +142,6 @@ public partial class ApplyWindowViewModel : ViewModelBase
         return panel;
     }
     
-   private async Task ApplyWallpaperAsync(CancellationToken token)
-    {
-        if (token.IsCancellationRequested)
-        {
-            Debug.WriteLine("Cancellation requested");
-            return;
-        }
-        if (Wallpaper != null)
-        {
-            Debug.WriteLine("Began Downloading Wallpaper");
-             ApplicationStatus = "Downloading Wallpaper...";
-            bool downloadResult =  await DownloadHelper.DownloadAsync(Wallpaper.DownloadLink, Wallpaper.Title);
-            if (downloadResult)
-            {
-                if (token.IsCancellationRequested)
-                {
-                    Debug.WriteLine("Cancellation requested");
-                    return;
-                }
-                Dispatcher.UIThread.Post(() =>
-                {
-                    ApplicationStatus = "Download complete. Converting Wallpaper...";
-                });
-                Debug.WriteLine("Download complete. Began converting wallpaper");
-                //begin conversion with result of download
-                string prospectiveFile = Environment.GetEnvironmentVariable("HOME") +
-                                         "/Pictures/wallpapers/preconvert/" + Wallpaper.Title + ".mp4";
-                //very dangerous with the int.Parse(). Must refine this
-                bool convertResult =  await FfmpegHelper.ConvertAsync(prospectiveFile, 0, 5,
-                    SelectedResolution,fps:int.Parse(SelectedFps));
-                if (convertResult)
-                {
-                    if (token.IsCancellationRequested)
-                    {
-                        Debug.WriteLine("Cancellation requested");
-                        return;
-                    }
-                    Dispatcher.UIThread.Post(() =>
-                    {
-                        ApplicationStatus = "Conversion complete. Applying wallpaper. This might take a while...";
-                    });
-                    Debug.WriteLine("Conversion Complete. Began Apply wallpaper");
-                    await SwwwHelper.ApplyAsync(Environment.GetEnvironmentVariable("HOME") +
-                                                "/Pictures/wallpapers/" + Wallpaper.Title + ".gif");
-                    Dispatcher.UIThread.Post(() =>
-                    {
-                        ApplicationStatus = "Wallpaper Applied Successfully";
-                    });
-                }
-                    
-            }
-            Debug.WriteLine("Application complete");
-        }
-       
-    }
 }
 
 public class DesignApplyWindowViewModel : ApplyWindowViewModel
@@ -199,10 +151,15 @@ public class DesignApplyWindowViewModel : ApplyWindowViewModel
         Wallpaper = new()
         {
             Title = "Garp With Galaxy Impact",
-            SourceFile = "https://www.motionbgs.com/media/6384/garp-with-galaxy-impact.960x540.mp4",
+            Preview = "https://www.motionbgs.com/media/6384/garp-with-galaxy-impact.960x540.mp4",
             WallpaperType = WallpaperType.Live,
             Resolution = "Resolution\":\"3840x2160"
         };
         
     }
+}
+
+public partial class ApplicationStatusWrapper : ObservableObject
+{
+    [ObservableProperty] private string status;
 }

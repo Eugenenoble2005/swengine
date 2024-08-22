@@ -65,7 +65,7 @@ public static class MotionBgsScraper
                         Resolution = text_xs,
                         Preview = source_tag,
                         WallpaperType = WallpaperType.Live,
-                        DownloadLink = download
+                        SourceFile = download
                     }
                 );
             }
