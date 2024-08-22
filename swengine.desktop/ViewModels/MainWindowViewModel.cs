@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text.Json;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using swengine.desktop.Models;
 using swengine.desktop.Services;
@@ -14,11 +15,14 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         GetWallpapers();
     }
+
+    //Later on will try to use reflection to try and dynamically load classes that implement IBgsService
+    public string[] Providers => new[] { "Motionbgs.com" };
+    [ObservableProperty] private string selectedProvider = "Motionbgs.com";
     private readonly MotionBgsService _motionBgsService = new();
 
    [ObservableProperty] private string searchTerm = "";
-
-    
+   
     //current page
     [ObservableProperty] private int currentPage = 1;
     [ObservableProperty] private List<WallpaperResponse> wallpaperResponses;
@@ -51,10 +55,9 @@ public partial class MainWindowViewModel : ViewModelBase
             GetWallpapers();
             return;
         }
-        Debug.WriteLine(SearchTerm);
         DataLoading = true;
         WallpaperResponses = await _motionBgsService.SearchAsync(SearchTerm, CurrentPage);
-        Debug.WriteLine(JsonSerializer.Serialize(WallpaperResponses));
+       
         DataLoading = false;
     }
 }

@@ -13,11 +13,10 @@ public static class FfmpegHelper
     {
         try
         {
-            Debug.WriteLine("Began COnverison");
             string home = Environment.GetEnvironmentVariable("HOME");
             string convertTo = home + "/Pictures/wallpapers/" + file.Split("/").Last().Split(".").First() + ".gif";
             string ffmpegArgs =
-                $"-i \"{file}\" -vf \"scale=-1:{QualityParser(quality)}:flags=lanczos,fps={fps}\" -loop 0 -y \"{convertTo}\"";
+                $" -ss {startAt} -t {endAt} -i \"{file}\" -vf \"scale=-1:{QualityParser(quality)}:flags=lanczos,fps={fps}\" -loop 0 -y \"{convertTo}\"";
             var convertProcess = new Process
             {
                 StartInfo = new()
