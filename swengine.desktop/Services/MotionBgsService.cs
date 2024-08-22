@@ -32,4 +32,16 @@ public class MotionBgsService : IBgsProvider
             return default;
         }
     }
+
+    public async Task<List<WallpaperResponse>> SearchAsync(string Query, int Page = 1)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<List<WallpaperResponse>>(await Scrapers.MotionBgsScraper.SearchAsync(Query,Page));
+        }
+        catch
+        {
+            return default;
+        }
+    }
 }

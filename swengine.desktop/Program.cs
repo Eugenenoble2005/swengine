@@ -12,7 +12,7 @@ sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
-       
+      //  MotionBgsScraper.SearchAsync("batman", 1);
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }

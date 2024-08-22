@@ -6,6 +6,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="swengine.desktop.Views.MainWindow"
+        WindowStartupLocation="CenterScreen"
+        
         xmlns:models="using:swengine.desktop.Models"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -31,9 +33,12 @@
         <StackPanel Grid.Row="1">
             <Grid ColumnDefinitions="*,*,*">
                  <TextBlock Grid.Column="0">Latest Wallpapers</TextBlock>
-                <TextBox Grid.Column="1" Watermark="Search for wallpapers online"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBox  Width="300" Watermark="Search for wallpapers online" Text="{Binding SearchTerm}"/>
+                    <Button Margin="10,0,0,0" Command="{Binding Search}">Search</Button>
+                </StackPanel>
                 <!--Pagination-->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="2">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">
                     <Button Command="{Binding Paginate}" CommandParameter="down">Prev</Button>
                     <Button Content="{Binding CurrentPage}" IsEnabled="False"></Button>
                     <Button Command="{Binding Paginate}" CommandParameter="up">Next</Button>
