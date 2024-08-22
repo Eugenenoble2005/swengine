@@ -10,14 +10,15 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="swengine.desktop">
-
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-    <ScrollViewer>
-    <Grid 
+    <Grid RowDefinitions="Auto,*">
+        <ProgressBar IsIndeterminate="True" Grid.Row="0" IsVisible="{Binding DataLoading}"></ProgressBar>
+        <ScrollViewer Grid.Row="1"   VerticalAlignment="Stretch">
+          <Grid 
         RowDefinitions="Auto,Auto,Auto,Auto">
             <Panel 
                 Background="Black"
@@ -27,16 +28,17 @@
                         HorizontalAlignment="Center"
                         >SWengine</TextBlock>
             </Panel>
-            <StackPanel
-                Grid.Row="1">
-                <Image Source="/Assets/archbg.png" Height="300" Width="300"  Margin="0,-60,0,0"></Image>
-                <TextBlock Margin="0,-50,0,0" HorizontalAlignment="Center">
-                    Current Wallpaper
-                </TextBlock>
-            </StackPanel>
-        <Border Grid.Row="2" Height="1" Background="Black" Margin="0,-10,0,0"></Border>
-        <StackPanel Grid.Row="3">
-            <TextBlock>Latest Wallpddapers</TextBlock>
+        <StackPanel Grid.Row="1">
+            <Grid ColumnDefinitions="*,*,*">
+                 <TextBlock Grid.Column="0">Latest Wallpapers</TextBlock>
+                <TextBox Grid.Column="1" Watermark="Search for wallpapers online"/>
+                <!--Pagination-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="2">
+                    <Button Command="{Binding Paginate}" CommandParameter="down">Prev</Button>
+                    <Button Content="{Binding CurrentPage}" IsEnabled="False"></Button>
+                    <Button Command="{Binding Paginate}" CommandParameter="up">Next</Button>
+                </StackPanel>
+            </Grid>
             <ItemsRepeater ItemsSource="{Binding WallpaperResponses}"  HorizontalAlignment="Center" Margin="0,-20,0,0">
                 <ItemsRepeater.Layout>
                     <UniformGridLayout MinColumnSpacing="20"  />
@@ -58,4 +60,6 @@
         </StackPanel>
     </Grid>
     </ScrollViewer>
+    </Grid>
+ 
 </Window>

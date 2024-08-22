@@ -19,22 +19,37 @@ namespace swengine.desktop.ViewModels;
 
 public partial class ApplyWindowViewModel : ViewModelBase
 {
+    //get search results from previous window
     private WallpaperResponse _wallpaperResponse;
+    
+    //MotionBgs service
     private MotionBgsService _motionBgsService = new();
     
+    //Resolution user selected. Defaults to 4k.
     [ObservableProperty] private GifQuality selectedResolution = GifQuality.q2160p;
+    
+    //FPS user selected for GIF
     [ObservableProperty] private string selectedFps = "60";
+    
+    //Binding that determines if the video in the window is visible. Drawing over NativeControlHost is not very easy in avalonia so we must hide the video whenever we want to display a ContentDialog
     [ObservableProperty] private bool isVideoVisible = true;
-    //wrapping in a class so it can be passed by reference
+    
+    //ApplicationStatus as in Status of applying the wallpaper. It is wrapped in a mutable class so it can be passed as a reference to the WallpaperHelper
     [ObservableProperty] private ApplicationStatusWrapper applicationStatusWrapper = new();
+    
+    //Initialize Native Libvlc client for playing the wallpaper preview
     private readonly LibVLC _libVlc = new LibVLC("--input-repeat=2");
 
     public ApplyWindowViewModel()
     {
         MediaPlayer = new MediaPlayer(_libVlc);
     }
+    
+    //Media Player object for libvlc
     public MediaPlayer MediaPlayer { get; }
     
+    
+    //The wallpaper object that will be gotten from the Bg service after it has obtained information about the wallpaper.
     [ObservableProperty] private Wallpaper wallpaper;
     public WallpaperResponse WallpaperResponse
     {
@@ -43,6 +58,8 @@ public partial class ApplyWindowViewModel : ViewModelBase
             ObjectCreated();
         }
     }
+    
+    //Called when the WallpaperResponse object is set while the window is opening
     public async void ObjectCreated()
     {
         //Debug.WriteLine(WallpaperResponse.Src);
@@ -51,6 +68,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
         MediaPlayer.Play(media);
     }
 
+    //Apply wallpaper. Will be abstracted for Both Live and static wallpaper
     public async void ApplyWallpaper()
     {
         //dialog cannot draw over video, so hide video when dialog is about to display
@@ -100,6 +118,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
             };
             applicationStatusDialog.Closed += (sender, args) =>
             {
+                //try to cancel the wallpaper application process. I haven't gotten this quite right yet as it only gets an opportunity to cancel after each step of the application. Will revisit.
                 Debug.WriteLine("Attempting to cancel");
                 ctx.Cancel();
             };
@@ -110,6 +129,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
       
     }
 
+    //Content for the content dialog that requests for FPS,resolution, e.t.c
     private object ApplyDialogContent()
     {
         StackPanel panel = new();
@@ -159,6 +179,7 @@ public class DesignApplyWindowViewModel : ApplyWindowViewModel
     }
 }
 
+//wrapper class for ApplicationStatus
 public partial class ApplicationStatusWrapper : ObservableObject
 {
     [ObservableProperty] private string status;

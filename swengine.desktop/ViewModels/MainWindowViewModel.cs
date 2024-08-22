@@ -14,13 +14,27 @@ public partial class MainWindowViewModel : ViewModelBase
         GetWallpapers();
     }
     private MotionBgsService _motionBgsService = new();
-
+    //current page
+    [ObservableProperty] private int currentPage = 1;
     [ObservableProperty] private List<WallpaperResponse> wallpaperResponses;
-    
+    [ObservableProperty] private bool dataLoading = false;
     async void GetWallpapers()
     {
-        WallpaperResponses = await _motionBgsService.LatestAsync(Page: 1);
-        Debug.WriteLine("testing function");
-       
+        DataLoading = true;
+        WallpaperResponses = await _motionBgsService.LatestAsync(Page: CurrentPage);
+        DataLoading = false;
+    }
+
+    public void Paginate(string seek)
+    {
+        if (seek == "up")
+        {
+            CurrentPage++;
+        }
+        else if (seek == "down" && CurrentPage > 1)
+        {
+            CurrentPage--;
+        }
+        GetWallpapers();
     }
 }
