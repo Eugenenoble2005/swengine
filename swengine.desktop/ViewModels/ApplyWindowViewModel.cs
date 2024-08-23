@@ -23,8 +23,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
     private WallpaperResponse _wallpaperResponse;
     
     //MotionBgs service
-    private MotionBgsService _motionBgsService = new();
-    
+    public IBgsProvider BgsProvider { get; set; }
     //Resolution user selected. Defaults to 4k.
     [ObservableProperty] private GifQuality selectedResolution = GifQuality.q2160p;
     
@@ -62,8 +61,9 @@ public partial class ApplyWindowViewModel : ViewModelBase
     //Called when the WallpaperResponse object is set while the window is opening
     public async void ObjectCreated()
     {
-        //Debug.WriteLine(WallpaperResponse.Src);
-         Wallpaper = await _motionBgsService.InfoAsync(WallpaperResponse.Src,Title:WallpaperResponse.Title);
+      
+         Wallpaper = await BgsProvider.InfoAsync(WallpaperResponse.Src,Title:WallpaperResponse.Title);
+         // Debug.WriteLine(JsonSerializer.Serialize(Wallpaper));
         using var media = new Media(_libVlc, new Uri(Wallpaper.Preview));
         MediaPlayer.Play(media);
     }
@@ -113,7 +113,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
                 Task.Run(() =>
                 {
                     WallpaperHelper.ApplyWallpaperAsync(Wallpaper,  ApplicationStatusWrapper, SelectedResolution, SelectedFps,
-                        ctx.Token);
+                        ctx.Token, referrer:WallpaperResponse.Src);
                 });
             };
             applicationStatusDialog.Closed += (sender, args) =>

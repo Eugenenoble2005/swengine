@@ -13,14 +13,25 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     public MainWindowViewModel()
     {
-        GetWallpapers();
+        //set provider initially to motionbgs.com
+        SetProvider();
+        Search();
     }
 
-    //Later on will try to use reflection to try and dynamically load classes that implement IBgsService
-    public string[] Providers => new[] { "Motionbgs.com" };
-    [ObservableProperty] private string selectedProvider = "Motionbgs.com";
-    private readonly MotionBgsService _motionBgsService = new();
+    public IBgsProvider BgsProvider;
+    public string[] Providers => new[] { "Motionbgs.com", "Moewalls.com" }; 
+    
+    private string _selectedProvider = "Motionbgs.com";
 
+    public string SelectedProvider
+    {
+        get => _selectedProvider;
+        set
+        {
+            SetProperty(ref _selectedProvider, value);
+            SetProvider();
+        }
+    }
    [ObservableProperty] private string searchTerm = "";
    
     //current page
@@ -28,13 +39,29 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private List<WallpaperResponse> wallpaperResponses;
     [ObservableProperty] private bool dataLoading = false;
     
-    async void GetWallpapers()
-    {
-        DataLoading = true;
-        WallpaperResponses = await _motionBgsService.LatestAsync(Page: CurrentPage);
-        DataLoading = false;
-    }
+    // async void GetWallpapers()
+    // {
+    //     DataLoading = true;
+    //     WallpaperResponses = await BgsProvider.LatestAsync(Page: CurrentPage);
+    //     DataLoading = false;
+    // }
 
+    private void SetProvider()
+    {
+        switch (SelectedProvider)
+        {
+            case "Motionbgs.com":
+                BgsProvider = new MotionBgsService();
+                break;
+            case "Moewalls.com":
+                BgsProvider = new MoewallsService();
+                
+                break;
+            default:
+                break;
+        }
+        Search();
+    }
     public void Paginate(string seek)
     {
         if (seek == "up")
@@ -49,15 +76,15 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     public async void Search()
     {
+        DataLoading = true;
         if (SearchTerm.Length == 0)
         {
             //empty search
-            GetWallpapers();
+            WallpaperResponses = await BgsProvider.LatestAsync(Page: CurrentPage);
+            DataLoading = false;
             return;
         }
-        DataLoading = true;
-        WallpaperResponses = await _motionBgsService.SearchAsync(SearchTerm, CurrentPage);
-       
+        WallpaperResponses = await BgsProvider.SearchAsync(SearchTerm, CurrentPage);
         DataLoading = false;
     }
 }

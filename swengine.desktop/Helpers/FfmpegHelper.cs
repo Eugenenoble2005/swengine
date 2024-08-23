@@ -44,6 +44,11 @@ public static class FfmpegHelper
             convertProcess.BeginOutputReadLine();
             convertProcess.BeginErrorReadLine();
             convertProcess.WaitForExit();
+            //if gif does not exist then conversion failed. Return false
+            if (!File.Exists(convertTo))
+            {
+                return false;
+            }
             //if everything went smoothly, delete the mp4.
             File.Delete(file);
             return true;

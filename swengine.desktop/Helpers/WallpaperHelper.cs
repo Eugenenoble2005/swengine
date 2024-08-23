@@ -10,9 +10,8 @@ namespace swengine.desktop.Helpers;
 
 public static class WallpaperHelper
 {
-    public async static Task ApplyWallpaperAsync(Wallpaper wallpaper,  ApplicationStatusWrapper applicationStatusWrapper, GifQuality selectedResolution, string selectedFps,CancellationToken token)
+    public async static Task ApplyWallpaperAsync(Wallpaper wallpaper,  ApplicationStatusWrapper applicationStatusWrapper, GifQuality selectedResolution, string selectedFps,CancellationToken token, string referrer = null)
     {
-        Debug.WriteLine(selectedResolution);
         if (token.IsCancellationRequested)
         {
             Debug.WriteLine("Cancellation requested");
@@ -22,7 +21,7 @@ public static class WallpaperHelper
         {
             Debug.WriteLine("Began Downloading Wallpaper");
              applicationStatusWrapper.Status = "Downloading Wallpaper...";
-            bool downloadResult =  await DownloadHelper.DownloadAsync(wallpaper.SourceFile, wallpaper.Title);
+            bool downloadResult =  await DownloadHelper.DownloadAsync(wallpaper.SourceFile, wallpaper.Title, wallpaper.NeedsReferrer,referrer  );
             if (downloadResult)
             {
                 if (token.IsCancellationRequested)
@@ -60,7 +59,27 @@ public static class WallpaperHelper
                         applicationStatusWrapper.Status  = "Wallpaper Applied Successfully";
                     });
                 }
+                else
+                {
+                    /*******
+                     *              HANDLE FAILED CONVERSION is convertResult is false
+                     */
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        applicationStatusWrapper.Status = "An error occured while converting. Please try again";
+                    });
+                }
                     
+            }
+            else
+            {
+                /*******
+                 *              HANDLE FAILED DOWNLOAD if downloadResult is false
+                 */
+                Dispatcher.UIThread.Post(() =>
+                {
+                    applicationStatusWrapper.Status = "An error occured while dowloading. Please try again";
+                });
             }
             Debug.WriteLine("Application complete");
         }
