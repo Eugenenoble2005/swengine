@@ -12,7 +12,7 @@ public class MoewallsService : IBgsProvider
     {
         try
         {
-            return JsonSerializer.Deserialize<List<WallpaperResponse>>(await MoewallsScraper.LatestAsync(Page));
+            return JsonSerializer.Deserialize<List<WallpaperResponse>>(await MoewallsScraper.LatestOrSearchAsync(Page,Function:"latest"));
         }
         catch
         {
@@ -28,6 +28,13 @@ public class MoewallsService : IBgsProvider
     }
     public async Task<List<WallpaperResponse>> SearchAsync(string Query, int Page = 1)
     {
-        return default;
+        try
+        {
+            return JsonSerializer.Deserialize<List<WallpaperResponse>>(await MoewallsScraper.LatestOrSearchAsync(Page,Function:"search",Query:Query));
+        }
+        catch
+        {
+            return default;
+        }
     }
 }

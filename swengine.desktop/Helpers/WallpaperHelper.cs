@@ -10,7 +10,7 @@ namespace swengine.desktop.Helpers;
 
 public static class WallpaperHelper
 {
-    public async static Task ApplyWallpaperAsync(Wallpaper wallpaper,  ApplicationStatusWrapper applicationStatusWrapper, GifQuality selectedResolution, string selectedFps,CancellationToken token, string referrer = null)
+    public async static Task ApplyWallpaperAsync(Wallpaper wallpaper,  ApplicationStatusWrapper applicationStatusWrapper, GifQuality selectedResolution, string selectedFps, int selectedDuration,CancellationToken token, string referrer = null)
     {
         if (token.IsCancellationRequested)
         {
@@ -38,7 +38,7 @@ public static class WallpaperHelper
                 string prospectiveFile = Environment.GetEnvironmentVariable("HOME") +
                                          "/Pictures/wallpapers/preconvert/" + wallpaper.Title + ".mp4";
                 //very dangerous with the int.Parse(). Must refine this
-                bool convertResult =  await FfmpegHelper.ConvertAsync(prospectiveFile, 0, 5,
+                bool convertResult =  await FfmpegHelper.ConvertAsync(prospectiveFile, 0, selectedDuration,
                     selectedResolution,fps:int.Parse(selectedFps));
                 if (convertResult)
                 {

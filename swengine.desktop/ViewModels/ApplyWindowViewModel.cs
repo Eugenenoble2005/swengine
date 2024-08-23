@@ -27,6 +27,8 @@ public partial class ApplyWindowViewModel : ViewModelBase
     //Resolution user selected. Defaults to 4k.
     [ObservableProperty] private GifQuality selectedResolution = GifQuality.q2160p;
     
+    //duration selected by user
+    [ObservableProperty] private int selectedDuration = 5;
     //FPS user selected for GIF
     [ObservableProperty] private string selectedFps = "60";
     
@@ -90,7 +92,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
         if (dialogResponse == ContentDialogResult.Primary)
         {
             dialog.Hide();
-           await Task.Delay(1000);
+           await Task.Delay(1000); 
             IsVideoVisible = false; 
             var applicationStatusDialog = new ContentDialog()
             {
@@ -112,7 +114,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
             {
                 Task.Run(() =>
                 {
-                    WallpaperHelper.ApplyWallpaperAsync(Wallpaper,  ApplicationStatusWrapper, SelectedResolution, SelectedFps,
+                    WallpaperHelper.ApplyWallpaperAsync(Wallpaper,  ApplicationStatusWrapper, SelectedResolution, SelectedFps,SelectedDuration,
                         ctx.Token, referrer:WallpaperResponse.Src);
                 });
             };
@@ -146,18 +148,34 @@ public partial class ApplyWindowViewModel : ViewModelBase
         
         //FPS selector
         TextBlock FpsSelectorText = new() { Text = "Select Frames per second:" };
-        TextBox FpsSelector = new();
+        TextBox FpsSelector = new(){ };
         FpsSelector.Bind(TextBox.TextProperty, new Binding()
         {
             Path = "SelectedFps",
             Source = this,
             Mode = BindingMode.TwoWay
         });
+
+        TextBlock DurationSelectorText = new() { Text = "Select duration" };
+        TextBox DurationSelector = new();
+        DurationSelector.Bind(TextBox.TextProperty, new Binding()
+        {
+            Path = "SelectedDuration",
+            Source=this,
+            Mode = BindingMode.TwoWay
+        });
+        ToolTip.SetTip(DurationSelector,new TextBlock()
+        {
+            Text = "5 seconds is usually sufficient for wallpapers. Longer wallpapers would be larger in size and take longer to apply"
+        });
         panel.Children.Add(ResolutionSelectorText);
         panel.Children.Add(ResolutionSelector);
         
         panel.Children.Add(FpsSelectorText);
         panel.Children.Add(FpsSelector);
+        
+        panel.Children.Add(DurationSelectorText);
+        panel.Children.Add(DurationSelector);
         
         return panel;
     }

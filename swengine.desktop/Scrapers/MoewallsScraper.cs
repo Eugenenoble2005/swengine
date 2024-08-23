@@ -11,12 +11,21 @@ namespace swengine.desktop.Scrapers;
 public static class MoewallsScraper
 {
     private static readonly string MoewallsBase = "https://www.moewalls.com";
-    public async static Task<string> LatestAsync(int Page = 1)
+    public async static Task<string> LatestOrSearchAsync(int Page = 1,string Function = "latest",string Query="")
     {
+        string url;
+        if (Function == "latest")
+        {
+            url = MoewallsBase + $"/page/{Page}";
+        }
+        else
+        {
+            url = MoewallsBase + $"/page/{Page}/?s={Query}";
+        }
         List<WallpaperResponse> wallpaper_responses = new();
         using (var http = new HttpClient())
         {
-            string url = MoewallsBase + $"/page/{Page}";
+           // string url = MoewallsBase + $"/page/{Page}";
             var request = await http.GetAsync(url);
             if (request.IsSuccessStatusCode)
             {

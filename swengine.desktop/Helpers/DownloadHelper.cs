@@ -9,7 +9,7 @@ namespace swengine.desktop.Helpers;
 
 public static class DownloadHelper
 {
-    public static async Task<bool> DownloadAsync(string Link,string Title, bool NeedsReferer = false, string Referer = null)
+    public static async Task<bool> DownloadAsync(string Link,string Title, bool NeedsReferrer = false, string Referer = null)
     {
         string HOME = Environment.GetEnvironmentVariable("HOME");
         try
@@ -17,7 +17,7 @@ public static class DownloadHelper
             
             using var client = new HttpClient();
             using var request = new HttpRequestMessage(HttpMethod.Get, Link);
-            if (NeedsReferer)
+            if (NeedsReferrer)
             {
                 //if provider requires referer
                 // Debug.WriteLine(Referer);
@@ -31,7 +31,7 @@ public static class DownloadHelper
             Directory.CreateDirectory(HOME + "/Pictures/wallpapers/preconvert");
             using var fs = new FileStream($"{HOME}/Pictures/wallpapers/preconvert/{Title}.mp4", FileMode.Create);
             await s.CopyToAsync(fs);
-            //if file does not exist in path then download failed.
+            //if file does not exist in path then download failed. Return false
             if (!File.Exists($"{HOME}/Pictures/wallpapers/preconvert/{Title}.mp4"))
             {
                 return false;

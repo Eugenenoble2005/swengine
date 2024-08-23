@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "swengine.desktop", "swengine.desktop\swengine.desktop.csproj", "{841F6CF5-DB45-4DDE-95F1-1C4534E16C74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "swengine.tests", "swengine.tests\swengine.tests.csproj", "{9C2CB13E-6137-49A1-A2F3-6B5CB0AFC957}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{841F6CF5-DB45-4DDE-95F1-1C4534E16C74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{841F6CF5-DB45-4DDE-95F1-1C4534E16C74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{841F6CF5-DB45-4DDE-95F1-1C4534E16C74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C2CB13E-6137-49A1-A2F3-6B5CB0AFC957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C2CB13E-6137-49A1-A2F3-6B5CB0AFC957}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C2CB13E-6137-49A1-A2F3-6B5CB0AFC957}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C2CB13E-6137-49A1-A2F3-6B5CB0AFC957}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
