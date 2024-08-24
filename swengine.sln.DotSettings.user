@@ -7,5 +7,8 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=96ad73f0_002D2cb1_002D4560_002Daa0e_002De1c21d27f40d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="LatestTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;MSTest::9C2CB13E-6137-49A1-A2F3-6B5CB0AFC957::net8.0::swengine.tests.Scrapers.MotionBgsTests.LatestTest&lt;/TestId&gt;
+    &lt;TestId&gt;MSTest::9C2CB13E-6137-49A1-A2F3-6B5CB0AFC957::net8.0::swengine.tests.Scrapers.MotionBgsTests.InfoTest&lt;/TestId&gt;
+    &lt;TestId&gt;MSTest::9C2CB13E-6137-49A1-A2F3-6B5CB0AFC957::net8.0::swengine.tests.Scrapers.MotionBgsTests.SearchTest&lt;/TestId&gt;
+    &lt;TestId&gt;MSTest::9C2CB13E-6137-49A1-A2F3-6B5CB0AFC957::net8.0::MoewallsTest.LatestTest&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
