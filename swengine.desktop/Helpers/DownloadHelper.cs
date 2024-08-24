@@ -17,11 +17,12 @@ public static class DownloadHelper
             
             using var client = new HttpClient();
             using var request = new HttpRequestMessage(HttpMethod.Get, Link);
+            Debug.WriteLine(Link);
             if (NeedsReferrer)
             {
                 //if provider requires referer
-                // Debug.WriteLine(Referer);
                 request.Headers.Referrer = new Uri(Referer);
+                Debug.WriteLine(Referer);
             }
             using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             using var s = await response.Content.ReadAsStreamAsync();
