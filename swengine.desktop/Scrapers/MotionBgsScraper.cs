@@ -79,6 +79,7 @@ public static class MotionBgsScraper
     {
     
         string url = $"{MotionBgsBase}/search?q={Query}&page={Page}";
+        Debug.WriteLine(url);
         List<WallpaperResponse> result= new();
         using (var http = new HttpClient())
         {

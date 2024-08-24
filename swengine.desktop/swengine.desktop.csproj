@@ -27,4 +27,8 @@
         <PackageReference Include="LibVLCSharp" Version="3.9.0" />
         <PackageReference Include="LibVLCSharp.Avalonia" Version="3.9.0" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Converters\" />
+    </ItemGroup>
 </Project>
