@@ -43,6 +43,7 @@ public static class DownloadHelper
                 {
                     // Extract the file extension from the filename
                     extension = Path.GetExtension(filename);
+                    Console.WriteLine(extension);
                 }
             }
             //create preconvert directory to store raw MP4s before being passed over to FFMPEG
@@ -72,7 +73,6 @@ public static class DownloadHelper
          string filename = Path.GetFileName(file);
          string dest = HOME + "/Pictures/wallpapers/preconvert/" + filename;
          File.Copy(file,dest,true );
-         Console.WriteLine(dest);
          if(!File.Exists(dest))
             return null;
         return dest;

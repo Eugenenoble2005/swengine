@@ -17,8 +17,10 @@ public static class FfmpegHelper
         try
         {
               string home = Environment.GetEnvironmentVariable("HOME");
+
             //if file is not a video, dont bother converting. Just return the image.
             if(Path.GetExtension(file).ToLower() != ".mp4" && Path.GetExtension(file).ToLower() != ".mkv"){
+                Console.WriteLine("File is not video");
                 string copyTo = home + "/Pictures/wallpapers/" + file.Split("/").Last();
                 File.Copy(file,copyTo,true);
                 if(!File.Exists(copyTo))

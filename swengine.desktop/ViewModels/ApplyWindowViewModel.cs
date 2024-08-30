@@ -65,7 +65,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
     {
       
          Wallpaper = await BgsProvider.InfoAsync(WallpaperResponse.Src,Title:WallpaperResponse.Title);
-          Debug.WriteLine(JsonSerializer.Serialize(Wallpaper));
+        
         using var media = new Media(_libVlc, new Uri(Wallpaper.Preview));
         MediaPlayer.Play(media);
         MediaPlayer.Volume = 0;

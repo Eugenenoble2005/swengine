@@ -26,7 +26,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     public IBgsProvider BgsProvider;
-    public string[] Providers => new[] { "Motionbgs.com", "Moewalls.com" }; 
+    public string[] Providers => new[] { "Motionbgs.com", "Moewalls.com", "Wallhaven.cc" }; 
     
     private string _selectedProvider = "Motionbgs.com";
 
@@ -65,6 +65,9 @@ public partial class MainWindowViewModel : ViewModelBase
             case "Moewalls.com":
                 BgsProvider = new MoewallsService();
                 
+                break;
+            case "Wallhaven.cc":
+                BgsProvider = new WallHavenService();
                 break;
             default:
                 break;
@@ -106,7 +109,6 @@ public partial class MainWindowViewModel : ViewModelBase
         };
       var result =   await uploadDialog.ShowAsync();
       if(result == ContentDialogResult.Primary){
-        //File upload will be prioritised over urls. If both a file and url are provided by the user, only the file will move forward.
         if(SelectedFile != null){
             var applyWindow = new ApplyWindow()
                 {
@@ -129,21 +131,6 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     private object UploadDialogContent(){
         StackPanel panel = new();
-        TextBlock header = new()
-        {
-            Text = "Upload file or URL",
-            FontSize = 20,
-
-        };
-
-        TextBlock orText = new(){
-            Text = "Or",
-            Margin = new(0,10,0,10)
-        };
-        TextBox urlBox = new(){
-             Watermark = "Enter url"
-        };
-
         Button uploadFile = new(){
             Content = "Upload File"
         };
@@ -156,12 +143,6 @@ public partial class MainWindowViewModel : ViewModelBase
         uploadFile.Click += (s,e)=>{
             handleFileDialog();
         };
-        panel.Children.Add(header);
-
-        panel.Children.Add(urlBox);
-
-        panel.Children.Add(orText);
-
         panel.Children.Add(uploadFile);
         panel.Children.Add(selectedFile);
         return panel;
@@ -176,7 +157,7 @@ public partial class MainWindowViewModel : ViewModelBase
             Title = "Open Text File",
             AllowMultiple = false,
              FileTypeFilter = new[] { new FilePickerFileType("filesv") {Patterns = new List<string>(){
-                "*.jpg", "*.jpeg", "*.png", "*.bmp","*.mp4","*.MP4","*.mkv","*.MKV"
+                "*.jpg", "*.jpeg", "*.png", "*.bmp","*.mp4","*.MP4","*.mkv","*.MKV","*.gif"
              }} }
         });
 
