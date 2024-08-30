@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -20,7 +21,6 @@ public static class DownloadHelper
         {
              //check if file is local, if so copy it to required directory and return new path
                 if(File.Exists(Link)){
-                    Console.WriteLine("Local file exists");
                     return CopyLocalFile(Link);
                 }
             using var client = new HttpClient();
@@ -43,8 +43,16 @@ public static class DownloadHelper
                 {
                     // Extract the file extension from the filename
                     extension = Path.GetExtension(filename);
-                    Console.WriteLine(extension);
                 }
+                
+            }
+            else{
+                //try to get extension from url. If both options fail then default to .mp4
+                 string[] possibleExts = new[] {"jpg","png","mp4","gif"};
+                    string ext = Link.Split(".").Last();
+                    if(ext != null && possibleExts.Contains(ext)){
+                        extension = "."+ext;
+                    }
             }
             //create preconvert directory to store raw MP4s before being passed over to FFMPEG
             Directory.CreateDirectory(HOME + "/Pictures/wallpapers/preconvert");
