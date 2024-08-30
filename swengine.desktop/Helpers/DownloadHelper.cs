@@ -26,14 +26,23 @@ public static class DownloadHelper
             }
             using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             using var s = await response.Content.ReadAsStreamAsync();
-
-          
+            string extension = ".mp4"; // default extension
+            if (response.Content.Headers.ContentDisposition != null)
+            {
+                var filename = response.Content.Headers.ContentDisposition.FileName?.Trim('\"');
+                if (!string.IsNullOrEmpty(filename))
+                {
+                    // Extract the file extension from the filename
+                    extension = Path.GetExtension(filename);
+                }
+            }
+            Console.WriteLine(extension);
             //create preconvert directory to store raw MP4s before being passed over to FFMPEG
             Directory.CreateDirectory(HOME + "/Pictures/wallpapers/preconvert");
-            using var fs = new FileStream($"{HOME}/Pictures/wallpapers/preconvert/{Title}.mp4", FileMode.Create);
+            using var fs = new FileStream($"{HOME}/Pictures/wallpapers/preconvert/{Title}{extension}", FileMode.Create);
             await s.CopyToAsync(fs);
             //if file does not exist in path then download failed. Return false
-            if (!File.Exists($"{HOME}/Pictures/wallpapers/preconvert/{Title}.mp4"))
+            if (!File.Exists($"{HOME}/Pictures/wallpapers/preconvert/{Title}{extension}"))
             {
                 return false;
             }
@@ -41,6 +50,9 @@ public static class DownloadHelper
         }
         catch
         {
+            #if __DEBUG__
+            throw;
+            #endif
             return false;
         }
      

@@ -30,6 +30,7 @@
                 </StackPanel>
                 <!--Pagination-->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2" Margin="0,0,5,0">
+                    <Button Command="{Binding OpenUploadDialog}">Upload</Button>
                     <ComboBox ItemsSource="{Binding Providers}" SelectedItem="{Binding SelectedProvider}" Margin="0,10,10,0"/>
                     <Button Command="{Binding Paginate}" CommandParameter="down">Prev</Button>
                     <Button Content="{Binding CurrentPage}" IsEnabled="False"></Button>

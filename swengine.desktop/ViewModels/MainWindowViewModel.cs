@@ -87,4 +87,17 @@ public partial class MainWindowViewModel : ViewModelBase
         WallpaperResponses = await BgsProvider.SearchAsync(SearchTerm, CurrentPage);
         DataLoading = false;
     }
+
+    public void OpenUploadDialog(){
+
+    }
+    private object UploadDialogContent(){
+        Panel panel = new();
+        TextBlock header = new()
+        {
+            Text = "Upload file or URL"
+
+        };
+        return panel;
+    }
 }

@@ -13,6 +13,7 @@ sealed class Program
     public static void Main(string[] args)
     {
       //  MotionBgsScraper.SearchAsync("batman", 1);
+      System.Diagnostics.Debug.WriteLine("Hello World");
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }
