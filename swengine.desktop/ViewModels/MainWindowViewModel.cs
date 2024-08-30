@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
+using FluentAvalonia.UI.Controls;
 using swengine.desktop.Models;
 using swengine.desktop.Services;
 
@@ -88,16 +89,43 @@ public partial class MainWindowViewModel : ViewModelBase
         DataLoading = false;
     }
 
-    public void OpenUploadDialog(){
-
+    public async void OpenUploadDialog(){
+        ContentDialog uploadDialog = new(){
+            Title = "Upload a wallpaper to your desktop",
+            Content = UploadDialogContent(),
+            PrimaryButtonText = "Upload",
+            IsPrimaryButtonEnabled = true
+        };
+        await uploadDialog.ShowAsync();
     }
     private object UploadDialogContent(){
-        Panel panel = new();
+        StackPanel panel = new();
         TextBlock header = new()
         {
-            Text = "Upload file or URL"
+            Text = "Upload file or URL",
+            FontSize = 20,
 
         };
+
+        TextBlock orText = new(){
+            Text = "Or",
+            Margin = new(0,10,0,10)
+        };
+        TextBox urlBox = new(){
+             Watermark = "Enter url"
+        };
+
+        Button uploadFile = new(){
+            Content = "Upload File"
+        };
+        
+        panel.Children.Add(header);
+
+        panel.Children.Add(urlBox);
+
+        panel.Children.Add(orText);
+
+        panel.Children.Add(uploadFile);
         return panel;
     }
 }
