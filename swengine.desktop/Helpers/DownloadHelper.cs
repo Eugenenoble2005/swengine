@@ -21,6 +21,7 @@ public static class DownloadHelper
         {
              //check if file is local, if so copy it to required directory and return new path
                 if(File.Exists(Link)){
+                    Console.WriteLine("Local file exists");
                     return CopyLocalFile(Link);
                 }
             using var client = new HttpClient();
@@ -47,7 +48,7 @@ public static class DownloadHelper
                 
             }
             else{
-                //try to get extension from url. If both options fail then default to .mp4
+                //try to get extension from url. If both options fail then default to mp4
                  string[] possibleExts = new[] {"jpg","png","mp4","gif"};
                     string ext = Link.Split(".").Last();
                     if(ext != null && possibleExts.Contains(ext)){
@@ -57,6 +58,7 @@ public static class DownloadHelper
             //create preconvert directory to store raw MP4s before being passed over to FFMPEG
             Directory.CreateDirectory(HOME + "/Pictures/wallpapers/preconvert");
             using var fs = new FileStream($"{HOME}/Pictures/wallpapers/preconvert/{Title}{extension}", FileMode.Create);
+            Console.WriteLine($"Link is {Link}");
             await s.CopyToAsync(fs);
             //if file does not exist in path then download failed. Return false
             if (!File.Exists($"{HOME}/Pictures/wallpapers/preconvert/{Title}{extension}"))
