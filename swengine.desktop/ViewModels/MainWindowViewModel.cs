@@ -1,8 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Text.Json;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Data;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentAvalonia.UI.Controls;
 using swengine.desktop.Models;
@@ -39,6 +44,8 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private int currentPage = 1;
     [ObservableProperty] private List<WallpaperResponse> wallpaperResponses;
     [ObservableProperty] private bool dataLoading = false;
+
+    [ObservableProperty] private string selectedFile = null;
     
     // async void GetWallpapers()
     // {
@@ -118,7 +125,15 @@ public partial class MainWindowViewModel : ViewModelBase
         Button uploadFile = new(){
             Content = "Upload File"
         };
-        
+        TextBlock selectedFile = new();
+        selectedFile.Bind(TextBlock.TextProperty,new Binding(){
+            Source = this,
+            Path = "SelectedFile",
+            Mode = BindingMode.TwoWay
+        });
+        uploadFile.Click += (s,e)=>{
+            handleFileDialog();
+        };
         panel.Children.Add(header);
 
         panel.Children.Add(urlBox);
@@ -126,6 +141,34 @@ public partial class MainWindowViewModel : ViewModelBase
         panel.Children.Add(orText);
 
         panel.Children.Add(uploadFile);
+        panel.Children.Add(selectedFile);
         return panel;
+    }
+
+    private async void handleFileDialog(){
+        var toplevel = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow;
+
+        // Start async operation to open the dialog.
+        var files = await toplevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = "Open Text File",
+            AllowMultiple = false,
+             FileTypeFilter = new[] { new FilePickerFileType("filesv") {Patterns = new List<string>(){
+                "*.jpg", "*.jpeg", "*.png", "*.bmp","*.mp4","*.MP4","*.mkv","*.MKV"
+             }} }
+        });
+
+        if (files.Count >= 1)
+        {
+            SelectedFile = files[0].TryGetLocalPath();
+            var file = files[0];
+            WallpaperResponse response = new(){
+                 Src = file.TryGetLocalPath(),
+                 Title = file.Name,
+                 //not needed here,
+                 Thumbnail = null,
+            };
+        
+        }
     }
 }
