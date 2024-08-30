@@ -106,5 +106,5 @@ Ensure the daemon is running before attempting to use this tool.
 
 <p>Live wallpapers can take a very long time (2+ minutes sometimes) to apply. This is because they need to be downloaded, converted, compressed and cached. This tool gives you the option to select the resolution (360p to 4k), frame rate and duration of these wallpapers. Needless to say, the larger these values , the longer the initial time to apply and the larger the size of the wallpaper.</p>
 
-<p>Currently two providers are scraped(motionbgs.com and moewalls.com) with a combined repo in thousands. </p>
+<p>Currently three providers are scraped(motionbgs.com , moewalls.com and wallhaven.cc) with a combined repo in thousands. You can also chose to upload your own video or image files and set them as your wallpaper immediately. </p>
 
