@@ -21,7 +21,6 @@ public static class DownloadHelper
         {
              //check if file is local, if so copy it to required directory and return new path
                 if(File.Exists(Link)){
-                    Console.WriteLine("Local file exists");
                     return CopyLocalFile(Link);
                 }
             using var client = new HttpClient();
