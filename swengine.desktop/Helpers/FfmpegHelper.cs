@@ -16,7 +16,16 @@ public static class FfmpegHelper
     {
         try
         {
-            string home = Environment.GetEnvironmentVariable("HOME");
+              string home = Environment.GetEnvironmentVariable("HOME");
+            //if file is not a video, dont bother converting. Just return the image.
+            if(Path.GetExtension(file).ToLower() != ".mp4" && Path.GetExtension(file).ToLower() != ".mkv"){
+                string copyTo = home + "/Pictures/wallpapers/" + file.Split("/").Last();
+                File.Copy(file,copyTo,true);
+                if(!File.Exists(copyTo))
+                    return null;
+                File.Delete(file);
+                return copyTo;
+            }
             string convertTo = home + "/Pictures/wallpapers/" + file.Split("/").Last().Split(".").First() + ".gif";
             string ffmpegArgs =
                 $" -ss {startAt} -t {endAt} -i \"{file}\" -vf \"scale=-1:{QualityParser(quality)}:flags=lanczos,fps={fps}\" -loop 0 -y \"{convertTo}\"";

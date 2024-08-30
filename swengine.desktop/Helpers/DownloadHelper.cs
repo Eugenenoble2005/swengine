@@ -14,9 +14,15 @@ public static class DownloadHelper
     **/
     public static async Task<string> DownloadAsync(string Link,string Title, bool NeedsReferrer = false, string Referer = null)
     {
+       
         string HOME = Environment.GetEnvironmentVariable("HOME");
         try
         {
+             //check if file is local, if so copy it to required directory and return new path
+                if(File.Exists(Link)){
+                    Console.WriteLine("Local file exists");
+                    return CopyLocalFile(Link);
+                }
             using var client = new HttpClient();
             using var request = new HttpRequestMessage(HttpMethod.Get, Link);
             Debug.WriteLine(Link);
@@ -58,6 +64,18 @@ public static class DownloadHelper
             return null;
         }
      
+    }
+    private static string CopyLocalFile(string file){
+         string HOME = Environment.GetEnvironmentVariable("HOME");
+         Directory.CreateDirectory(HOME + "/Pictures/wallpapers/preconvert");
+
+         string filename = Path.GetFileName(file);
+         string dest = HOME + "/Pictures/wallpapers/preconvert/" + filename;
+         File.Copy(file,dest,true );
+         Console.WriteLine(dest);
+         if(!File.Exists(dest))
+            return null;
+        return dest;
     }
 
 }
