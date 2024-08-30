@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using FluentAvalonia.UI.Controls;
 using swengine.desktop.Models;
 using swengine.desktop.Services;
+using swengine.desktop.Views;
 
 namespace swengine.desktop.ViewModels;
 
@@ -103,7 +104,28 @@ public partial class MainWindowViewModel : ViewModelBase
             PrimaryButtonText = "Upload",
             IsPrimaryButtonEnabled = true
         };
-        await uploadDialog.ShowAsync();
+      var result =   await uploadDialog.ShowAsync();
+      if(result == ContentDialogResult.Primary){
+        //File upload will be prioritised over urls. If both a file and url are provided by the user, only the file will move forward.
+        if(SelectedFile != null){
+            var applyWindow = new ApplyWindow()
+                {
+                    DataContext = new ApplyWindowViewModel()
+                    {
+                        BgsProvider = new LocalBgService(),
+                        WallpaperResponse = new(){
+                             Src = SelectedFile,
+                             Thumbnail = null,
+                             Title = SelectedFile
+                        },
+                        //pass the current provider so the Apply window knows which provider to query for the wallpaper
+                    
+                    }
+                };
+                await applyWindow.ShowDialog<ApplyWindowViewModel>((Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow);
+        }
+      }
+
     }
     private object UploadDialogContent(){
         StackPanel panel = new();
@@ -159,16 +181,6 @@ public partial class MainWindowViewModel : ViewModelBase
         });
 
         if (files.Count >= 1)
-        {
             SelectedFile = files[0].TryGetLocalPath();
-            var file = files[0];
-            WallpaperResponse response = new(){
-                 Src = file.TryGetLocalPath(),
-                 Title = file.Name,
-                 //not needed here,
-                 Thumbnail = null,
-            };
-        
-        }
     }
 }

@@ -9,7 +9,10 @@ namespace swengine.desktop.Helpers;
 
 public static class FfmpegHelper
 {
-    public async static Task<bool> ConvertAsync(string file, double startAt = 0, double endAt = 5, GifQuality quality = GifQuality.q1080p, int fps = 60 )
+    /*
+    *ConvertAsync will return the location of the converted file if successful, or null if unsuccesful
+    **/
+    public async static Task<string> ConvertAsync(string file, double startAt = 0, double endAt = 5, GifQuality quality = GifQuality.q1080p, int fps = 60 )
     {
         try
         {
@@ -47,17 +50,17 @@ public static class FfmpegHelper
             //if gif does not exist then conversion failed. Return false
             if (!File.Exists(convertTo))
             {
-                return false;
+                return null;
             }
             //if everything went smoothly, delete the mp4.
             File.Delete(file);
-            return true;
+            return convertTo;
         }
         catch
         {
-            return false;
+            return null;
         }
-        return default;
+      
     }
 
     private static string QualityParser(GifQuality quality)

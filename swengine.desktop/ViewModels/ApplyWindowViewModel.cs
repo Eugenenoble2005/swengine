@@ -65,9 +65,10 @@ public partial class ApplyWindowViewModel : ViewModelBase
     {
       
          Wallpaper = await BgsProvider.InfoAsync(WallpaperResponse.Src,Title:WallpaperResponse.Title);
-         // Debug.WriteLine(JsonSerializer.Serialize(Wallpaper));
+          Debug.WriteLine(JsonSerializer.Serialize(Wallpaper));
         using var media = new Media(_libVlc, new Uri(Wallpaper.Preview));
         MediaPlayer.Play(media);
+        MediaPlayer.Volume = 0;
     }
 
     //Apply wallpaper. Will be abstracted for Both Live and static wallpaper

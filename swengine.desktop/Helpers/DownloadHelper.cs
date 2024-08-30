@@ -9,17 +9,20 @@ namespace swengine.desktop.Helpers;
 
 public static class DownloadHelper
 {
-    public static async Task<bool> DownloadAsync(string Link,string Title, bool NeedsReferrer = false, string Referer = null)
+    /*
+    *DownloadAsync will return the location of the downloaded file if successful, or null if unsuccesful
+    **/
+    public static async Task<string> DownloadAsync(string Link,string Title, bool NeedsReferrer = false, string Referer = null)
     {
         string HOME = Environment.GetEnvironmentVariable("HOME");
         try
         {
-            
             using var client = new HttpClient();
             using var request = new HttpRequestMessage(HttpMethod.Get, Link);
             Debug.WriteLine(Link);
             if (NeedsReferrer)
             {
+    
                 //if provider requires referer
                 request.Headers.Referrer = new Uri(Referer);
                 Debug.WriteLine(Referer);
@@ -36,7 +39,6 @@ public static class DownloadHelper
                     extension = Path.GetExtension(filename);
                 }
             }
-            Console.WriteLine(extension);
             //create preconvert directory to store raw MP4s before being passed over to FFMPEG
             Directory.CreateDirectory(HOME + "/Pictures/wallpapers/preconvert");
             using var fs = new FileStream($"{HOME}/Pictures/wallpapers/preconvert/{Title}{extension}", FileMode.Create);
@@ -44,17 +46,18 @@ public static class DownloadHelper
             //if file does not exist in path then download failed. Return false
             if (!File.Exists($"{HOME}/Pictures/wallpapers/preconvert/{Title}{extension}"))
             {
-                return false;
+                return null;
             }
-            return true;
+            return $"{HOME}/Pictures/wallpapers/preconvert/{Title}{extension}";
         }
         catch
         {
             #if __DEBUG__
             throw;
             #endif
-            return false;
+            return null;
         }
      
     }
+
 }
