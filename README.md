@@ -108,3 +108,25 @@ Ensure the daemon is running before attempting to use this tool.
 
 <p>Currently three providers are scraped(motionbgs.com , moewalls.com and wallhaven.cc) with a combined repo in thousands. You can also chose to upload your own video or image files and set them as your wallpaper immediately. </p>
 
+<h3>Scripts</h3>
+<p>Somtimes, you might want to run a script or command when you apply a new wallpaper. Examples of such times may be when you want to generate a new color pallete for your desktop using wallust or pywal or when you want to copy your new wallpaper to a shared location so it can be used by your wayland screen locker. In any case , you can easily add custom commands that will run after swengine changes your wallpaper. 
+
+</p>
+<p>Clicking the scripts button on the toolbar will present you with a very simple text editor where you edit the shell script located at 
+  
+  ```$HOME/.swengine_after_run.sh```. 
+  
+  You can chose to edit this file anyway you want with any text editor. This shell script will be run when you've applied a new wallpaper. 
+**IT GOES WITHOUT SAYING THAT YOUR COMPUTER WILL ATTEMPT TO RUN ANY COMMAND IT FINDS IN THIS FILE, FAULTY COMMANDS CAN DAMAGE YOUR COMPUTER , EXERCISE GREAT CAUTION HERE**. 
+  Here is a simple example that runs wallust with the newely set wallpaper:
+  
+  ```
+  #run wallust
+  wallust run "$1"
+
+  #copy wallpaper to shared location
+  cp "$1" $HOME/.config/hypr/wallpaper_effects/.wallpaper_current
+  ```
+
+"$1" means the first paramter fed to the script which in this case will always be the full rooted path of the newely applied wallpaper.
+</p>
