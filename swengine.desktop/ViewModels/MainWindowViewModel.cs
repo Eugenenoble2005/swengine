@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data;
 using Avalonia.Platform.Storage;
+using AvaloniaEdit.Document;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentAvalonia.UI.Controls;
 using swengine.desktop.Models;
@@ -47,6 +48,10 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private bool dataLoading = false;
 
     [ObservableProperty] private string selectedFile = null;
+
+    [ObservableProperty] private TextDocument customScriptsContent = new(){
+        Text = ""
+    };
     
     // async void GetWallpapers()
     // {

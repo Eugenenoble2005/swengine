@@ -9,43 +9,52 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data;
 using Avalonia.Platform.Storage;
 using AvaloniaEdit;
+using AvaloniaEdit.Document;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentAvalonia.UI.Controls;
 using swengine.desktop.Models;
 using swengine.desktop.Services;
 using swengine.desktop.Views;
+using swengine.desktop.Helpers;
 namespace swengine.desktop.ViewModels;
 public partial class MainWindowViewModel{
-    public async void OpenUploadDialog(){
-        ContentDialog uploadDialog = new(){
-            Title = "Upload a wallpaper to your desktop",
-            Content = UploadDialogContent(),
-            PrimaryButtonText = "Upload",
-            IsPrimaryButtonEnabled = true
-        };
-            var result =   await uploadDialog.ShowAsync();
-            if(result == ContentDialogResult.Primary){
-                if(SelectedFile != null){
-                    var applyWindow = new ApplyWindow()
-                        {
-                            DataContext = new ApplyWindowViewModel()
-                            {
-                                BgsProvider = new LocalBgService(),
-                                WallpaperResponse = new(){
-                                    Src = SelectedFile,
-                                    Thumbnail = null,
-                                    Title = SelectedFile
-                                },
-                                //pass the current provider so the Apply window knows which provider to query for the wallpaper
-                            
-                            }
-                        };
-                        await applyWindow.ShowDialog<ApplyWindowViewModel>((Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow);
-                }
-      }
+   public async void OpenUploadDialog()
+{
+    ContentDialog uploadDialog = new()
+    {
+        Title = "Upload a wallpaper to your desktop",
+        Content = UploadDialogContent(),
+        PrimaryButtonText = "Upload",
+        IsPrimaryButtonEnabled = true
+    };
 
+    var result = await uploadDialog.ShowAsync();
+    
+    if (result == ContentDialogResult.Primary)
+    {
+        if (SelectedFile != null)
+        {
+            var applyWindow = new ApplyWindow()
+            {
+                DataContext = new ApplyWindowViewModel()
+                {
+                    BgsProvider = new LocalBgService(),
+                    WallpaperResponse = new()
+                    {
+                        Src = SelectedFile,
+                        Thumbnail = null,
+                        Title = SelectedFile
+                    }
+                }
+            };
+
+            await applyWindow.ShowDialog<ApplyWindowViewModel>(
+                (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow
+            );
+        }
     }
-    private object UploadDialogContent(){
+}
+   private object UploadDialogContent(){
         StackPanel panel = new();
         Button uploadFile = new(){
             Content = "Upload File"
@@ -71,14 +80,14 @@ public partial class MainWindowViewModel{
           TextEditor customScriptBox = new(){
            WordWrap = true,
            ShowLineNumbers = true,  
-           Height = 100
+           Height = 100,
+          Document = new() {Text = "A sample text"}
         };
-        // TextBox customScriptBox = new(){
-        //     Height=100,
-        //     Watermark="Enter commands to run, substitute $wallpaper for the newely set wallpaper",
-        //     AcceptsReturn = true,
-        //     TextWrapping = Avalonia.Media.TextWrapping.Wrap
-        // };
+        customScriptBox.Bind(TextEditor.DocumentProperty, new Binding(){
+             Source = this,
+             Path = "CustomScriptsContent",
+             Mode = BindingMode.TwoWay
+        });
         StackPanel wrapper = new();
         wrapper.Children.Add(customScriptText);
         wrapper.Children.Add(customScriptBox);
@@ -86,13 +95,23 @@ public partial class MainWindowViewModel{
         return wrapper;
     }
     public async void OpenCustomScriptsDialog(){
+        var readonly_custom_script_content = CustomScriptsHelper.ScriptsFileContent;
+        if(readonly_custom_script_content == null)
+            CustomScriptsContent.Text = "echo $wallpaper";
+        else
+            CustomScriptsContent.Text = readonly_custom_script_content;
+        
         var dialog  =  new ContentDialog(){
                 Title = "Custom Scripts",
                 IsPrimaryButtonEnabled = true,
                 PrimaryButtonText = "Add Script",
                 Content = CustomScriptsDialogContent()
         };
-        await dialog.ShowAsync();
+        var dialogResponse = await dialog.ShowAsync();
+        if(dialogResponse ==  ContentDialogResult.Primary){
+            //save the content to the scripts file. Really just run this whether it fails or not.
+           CustomScriptsHelper.SetScriptsFileContent(CustomScriptsContent.Text);
+        }
     }
 
     private async void handleFileDialog(){
