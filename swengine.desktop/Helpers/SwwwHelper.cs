@@ -70,17 +70,9 @@ public static class SwwwHelper
                         CreateNoWindow = true,
                         }
                     };
-                   Console.WriteLine(scriptProcess.StartInfo.FileName + " " + scriptProcess.StartInfo.Arguments);
-                    scriptProcess.OutputDataReceived += (e,o)=>{
-                        Console.WriteLine(o.Data);
-                    };
-                     scriptProcess.ErrorDataReceived += (e,o)=>{
-                        Console.WriteLine(o.Data);
-                    };
+                
                     scriptProcess.Start();
-                    scriptProcess.BeginOutputReadLine();
-                    scriptProcess.BeginErrorReadLine();
-                    scriptProcess.WaitForExit();
+                 
                  });
             }
             return true;

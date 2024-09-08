@@ -74,7 +74,7 @@ public partial class MainWindowViewModel{
     }
     private object CustomScriptsDialogContent(){
          TextBlock customScriptText = new(){
-            Text = "Enter commands you want to run after a new wallpaper has been set. One command per line. Take great caution here",
+            Text = "Enter commands you want to run after a new wallpaper has been set. One command per line. Substitute \"$1\" for the full path of the newely set wallpaper. TAKE GREAT CAUTION HERE",
             TextWrapping = Avalonia.Media.TextWrapping.Wrap
         };
           TextEditor customScriptBox = new(){
