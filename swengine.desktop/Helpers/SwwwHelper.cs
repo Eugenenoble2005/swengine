@@ -50,7 +50,7 @@ public static class SwwwHelper
                   Task.Run(()=>{
                     string script_location = CustomScriptsHelper.scripts_location;
                     //export wallpaper variable then run the user's script
-                    string command = $"wallpaper=\"{file}\" && \"{script_location}\"";
+                    string command = $"\"{script_location}\" \"\"{file}\"\"";
 
                     //first make script executable
                     Process.Start(new ProcessStartInfo(){
@@ -70,7 +70,7 @@ public static class SwwwHelper
                         CreateNoWindow = true,
                         }
                     };
-                   
+                   Console.WriteLine(scriptProcess.StartInfo.FileName + " " + scriptProcess.StartInfo.Arguments);
                     scriptProcess.OutputDataReceived += (e,o)=>{
                         Console.WriteLine(o.Data);
                     };
