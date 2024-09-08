@@ -4,7 +4,7 @@ using System.IO;
 namespace swengine.desktop.Helpers;
 public static class CustomScriptsHelper
 {
-    private static readonly string scripts_location = Environment.GetEnvironmentVariable("HOME") != null ? Path.Join(Environment.GetEnvironmentVariable("HOME"),".swengine_after_run.sh") : null;
+    public static readonly string scripts_location = Environment.GetEnvironmentVariable("HOME") != null ? Path.Join(Environment.GetEnvironmentVariable("HOME"),".swengine_after_run.sh") : null;
 
     /**
     *Write content of Content to the scripts file

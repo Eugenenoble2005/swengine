@@ -57,7 +57,7 @@ public static class DownloadHelper
             //create preconvert directory to store raw MP4s before being passed over to FFMPEG
             Directory.CreateDirectory(HOME + "/Pictures/wallpapers/preconvert");
             using var fs = new FileStream($"{HOME}/Pictures/wallpapers/preconvert/{Title}{extension}", FileMode.Create);
-            Console.WriteLine($"Link is {Link}");
+        
             await s.CopyToAsync(fs);
             //if file does not exist in path then download failed. Return false
             if (!File.Exists($"{HOME}/Pictures/wallpapers/preconvert/{Title}{extension}"))

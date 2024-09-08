@@ -1,4 +1,6 @@
+using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace swengine.desktop.Helpers;
@@ -33,7 +35,54 @@ public static class SwwwHelper
             applyProcess.BeginErrorReadLine();
             applyProcess.BeginOutputReadLine();
             applyProcess.WaitForExit();
-            Process.Start("notify-send \"Wallpaper succesfully applied!\"");
+
+
+            //send notification
+            Process.Start(new ProcessStartInfo(){
+                FileName = "notify-send",
+                Arguments = "\"Wallpaper set succesfully\"",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            });
+
+            //run custom scripts asynchronously, basically a fire and forget
+            if(File.Exists(CustomScriptsHelper.scripts_location)){
+                  Task.Run(()=>{
+                    string script_location = CustomScriptsHelper.scripts_location;
+                    //export wallpaper variable then run the user's script
+                    string command = $"wallpaper=\"{file}\" && \"{script_location}\"";
+
+                    //first make script executable
+                    Process.Start(new ProcessStartInfo(){
+                        FileName = "chmod",
+                        Arguments = $"+x {script_location}",
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    });
+
+                    var scriptProcess = new Process(){
+                        StartInfo = new(){
+                            FileName = "/bin/bash",
+                        Arguments = $"-c \"{command}\"",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true,
+                        }
+                    };
+                   
+                    scriptProcess.OutputDataReceived += (e,o)=>{
+                        Console.WriteLine(o.Data);
+                    };
+                     scriptProcess.ErrorDataReceived += (e,o)=>{
+                        Console.WriteLine(o.Data);
+                    };
+                    scriptProcess.Start();
+                    scriptProcess.BeginOutputReadLine();
+                    scriptProcess.BeginErrorReadLine();
+                    scriptProcess.WaitForExit();
+                 });
+            }
             return true;
         }
         catch
