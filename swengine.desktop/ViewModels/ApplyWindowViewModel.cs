@@ -31,6 +31,9 @@ public partial class ApplyWindowViewModel : ViewModelBase
     [ObservableProperty] private int selectedDuration = 5;
     //FPS user selected for GIF
     [ObservableProperty] private string selectedFps = "60";
+
+    //whether to use the best settings for a particular wallpaper
+    [ObservableProperty] private bool bestSettings = true;
     
     //Binding that determines if the video in the window is visible. Drawing over NativeControlHost is not very easy in avalonia so we must hide the video whenever we want to display a ContentDialog
     [ObservableProperty] private bool isVideoVisible = true;
@@ -115,7 +118,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
             {
                 Task.Run(() =>
                 {
-                    WallpaperHelper.ApplyWallpaperAsync(Wallpaper,  ApplicationStatusWrapper, SelectedResolution, SelectedFps,SelectedDuration,
+                    WallpaperHelper.ApplyWallpaperAsync(Wallpaper,  ApplicationStatusWrapper, SelectedResolution, SelectedFps,SelectedDuration, BestSettings,
                         ctx.Token, referrer:WallpaperResponse.Src);
                 });
             };
@@ -133,53 +136,6 @@ public partial class ApplyWindowViewModel : ViewModelBase
     }
 
     //Content for the content dialog that requests for FPS,resolution, e.t.c
-    private object ApplyDialogContent()
-    {
-        StackPanel panel = new();
-        //resolution selector
-        ComboBox ResolutionSelector = new();
-        TextBlock ResolutionSelectorText = new() { Text = "Select Resolution:" };
-        ResolutionSelector.ItemsSource = new[] { GifQuality.q2160p, GifQuality.q1440p, GifQuality.q1080p, GifQuality.q720p, GifQuality.q480p, GifQuality.q360p};
-        ResolutionSelector.Bind(ComboBox.SelectedItemProperty, new Binding()
-        {
-            Path = "SelectedResolution",
-            Source = this,
-            Mode = BindingMode.TwoWay
-        });
-        
-        //FPS selector
-        TextBlock FpsSelectorText = new() { Text = "Select Frames per second:" };
-        TextBox FpsSelector = new(){ };
-        FpsSelector.Bind(TextBox.TextProperty, new Binding()
-        {
-            Path = "SelectedFps",
-            Source = this,
-            Mode = BindingMode.TwoWay
-        });
-
-        TextBlock DurationSelectorText = new() { Text = "Select duration" };
-        TextBox DurationSelector = new();
-        DurationSelector.Bind(TextBox.TextProperty, new Binding()
-        {
-            Path = "SelectedDuration",
-            Source=this,
-            Mode = BindingMode.TwoWay
-        });
-        ToolTip.SetTip(DurationSelector,new TextBlock()
-        {
-            Text = "5 seconds is usually sufficient for wallpapers. Longer wallpapers would be larger in size and take longer to apply"
-        });
-        panel.Children.Add(ResolutionSelectorText);
-        panel.Children.Add(ResolutionSelector);
-        
-        panel.Children.Add(FpsSelectorText);
-        panel.Children.Add(FpsSelector);
-        
-        panel.Children.Add(DurationSelectorText);
-        panel.Children.Add(DurationSelector);
-        
-        return panel;
-    }
     
 }
 

@@ -10,11 +10,12 @@ namespace swengine.desktop.Helpers;
 
 public static class WallpaperHelper
 {
-    public async static Task ApplyWallpaperAsync(Wallpaper wallpaper,  ApplicationStatusWrapper applicationStatusWrapper, GifQuality selectedResolution, string selectedFps, int selectedDuration,CancellationToken token, string referrer = null)
+    public async static Task ApplyWallpaperAsync(Wallpaper wallpaper,  ApplicationStatusWrapper applicationStatusWrapper, GifQuality selectedResolution, string selectedFps, int selectedDuration,bool bestSettings, CancellationToken token, string referrer = null)
     {
         if(wallpaper == null){
             return;
         }
+        long CURRENT_TIMESTAMP = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         applicationStatusWrapper.Status = "Downloading Wallpaper...";
         string downloadResult =  await DownloadHelper.DownloadAsync(wallpaper.SourceFile, wallpaper.Title, wallpaper.NeedsReferrer,referrer  );
         //if download failed, return and notify user.
@@ -41,7 +42,7 @@ public static class WallpaperHelper
         */
 
            //very dangerous with the int.Parse(). Must refine this
-        string convertResult =  await FfmpegHelper.ConvertAsync(downloadResult, 0, selectedDuration,selectedResolution,fps:int.Parse(selectedFps));
+        string convertResult =  await FfmpegHelper.ConvertAsync(downloadResult, 0, selectedDuration,selectedResolution,fps:int.Parse(selectedFps),bestSettings);
         //if conversion failed, return and notify user
         if(convertResult == null){
              Dispatcher.UIThread.Post(() =>
@@ -65,9 +66,14 @@ public static class WallpaperHelper
         *       Conversion complete begin application
         */
          await SwwwHelper.ApplyAsync(convertResult);
+         long APPLICATION_TIME = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - CURRENT_TIMESTAMP;
+         TimeSpan applicationTimeSpan = TimeSpan.FromSeconds(APPLICATION_TIME);
+         string applicationTimeSpanText = "";
+         applicationTimeSpanText = applicationTimeSpan.TotalMinutes > 1 ? $"{applicationTimeSpan.TotalMinutes.ToString("F2")} minute(s)" : $"{applicationTimeSpan.TotalSeconds.ToString("F2")} second(s)";
+        
         Dispatcher.UIThread.Post(() =>
         {
-            applicationStatusWrapper.Status  = "Wallpaper Applied Successfully";
+            applicationStatusWrapper.Status  = $"Wallpaper Applied Successfully in {applicationTimeSpanText}";
         });
        
     }

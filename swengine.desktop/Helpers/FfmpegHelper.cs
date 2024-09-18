@@ -12,7 +12,7 @@ public static class FfmpegHelper
     /*
     *ConvertAsync will return the location of the converted file if successful, or null if unsuccesful
     **/
-    public async static Task<string> ConvertAsync(string file, double startAt = 0, double endAt = 5, GifQuality quality = GifQuality.q1080p, int fps = 60 )
+    public async static Task<string> ConvertAsync(string file, double startAt = 0, double endAt = 5, GifQuality quality = GifQuality.q1080p, int fps = 60, bool bestSettings= false )
     {
         try
         {
@@ -28,8 +28,10 @@ public static class FfmpegHelper
                 return copyTo;
             }
             string convertTo = home + "/Pictures/wallpapers/" + file.Split("/").Last().Split(".").First() + ".gif";
-            string ffmpegArgs =
-                $" -ss {startAt} -t {endAt} -i \"{file}\" -vf \"scale=-1:{QualityParser(quality)}:flags=lanczos,fps={fps}\" -loop 0 -y \"{convertTo}\"";
+
+               //if the user decides to use the best settings, just convert to a gif without applying any filters
+            string ffmpegArgs = bestSettings ? $" -i \"{file}\" -y \"{convertTo}\"" : $" -ss {startAt} -t {endAt} -i \"{file}\" -vf \"scale=-1:{QualityParser(quality)}:flags=lanczos,fps={fps}\" -loop 0 -y \"{convertTo}\"";
+    
             var convertProcess = new Process
             {
                 StartInfo = new()
