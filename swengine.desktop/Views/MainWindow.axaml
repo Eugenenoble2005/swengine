@@ -23,16 +23,16 @@
              <StackPanel.Background>
                  <SolidColorBrush Color="Black" Opacity="0.5"></SolidColorBrush>
              </StackPanel.Background>
-             <Grid ColumnDefinitions="*,*,*">
-                 <TextBlock Grid.Column="0" Margin="10" FontSize="20">Latest Wallpapers</TextBlock>
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <TextBox  Width="250" Watermark="Search for wallpapers online" Text="{Binding SearchTerm}"/> <Button Margin="10,0,0,0" Command="{Binding Search}">Search</Button>
+             <Grid>
+                <StackPanel  Orientation="Horizontal">
+                    <TextBox  Width="250" Watermark="Search for wallpapers online" Text="{Binding SearchTerm}"/> <Button Margin="10" Command="{Binding Search}">Search</Button>
                 </StackPanel>
                 <!--Pagination-->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2" Margin="0,0,5,0">
-                    <Button Command="{Binding OpenUploadDialog}">Upload</Button>
-                    <Button Command="{Binding OpenCustomScriptsDialog}">Scripts</Button>
-                    <ComboBox ItemsSource="{Binding Providers}" SelectedItem="{Binding SelectedProvider}" Margin="0,10,10,0"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">
+                    <Button Command="{Binding OpenUploadDialog}" Margin="10">Upload</Button>
+                    <Button Command="{Binding OpenCustomScriptsDialog}" Margin="10">Scripts</Button>
+                    <ComboBox ItemsSource="{Binding Providers}" SelectedItem="{Binding SelectedProvider}" Margin="10"/>
+                    <ComboBox ItemsSource="{Binding Backends}" SelectedItem="{Binding SelectedBackend}" Margin="10"/>
                     <Button Command="{Binding Paginate}" CommandParameter="down">Prev</Button>
                     <Button Content="{Binding CurrentPage}" IsEnabled="False"></Button>
                     <Button Command="{Binding Paginate}" CommandParameter="up">Next</Button>

@@ -28,9 +28,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public IBgsProvider BgsProvider;
     public string[] Providers => new[] { "Motionbgs.com", "Moewalls.com", "Wallhaven.cc" }; 
+    public string[] Backends => new[] {"SWWW","KDE","GNOME"};
     
     private string _selectedProvider = "Motionbgs.com";
-
+    private string _selectedBackend = "SWWW";
     public string SelectedProvider
     {
         get => _selectedProvider;
@@ -40,6 +41,14 @@ public partial class MainWindowViewModel : ViewModelBase
             SetProvider();
         }
     }
+    public string SelectedBackend {
+        get => _selectedBackend;
+        set {
+            SetProperty(ref _selectedBackend,value);
+            SetBackend();
+        }
+    }
+    
    [ObservableProperty] private string searchTerm = "";
    
     //current page
@@ -78,6 +87,9 @@ public partial class MainWindowViewModel : ViewModelBase
                 break;
         }
         Search();
+    }
+    private void SetBackend(){
+        
     }
     public void Paginate(string seek)
     {

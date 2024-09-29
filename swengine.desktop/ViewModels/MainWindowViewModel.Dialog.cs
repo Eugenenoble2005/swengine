@@ -44,7 +44,8 @@ public partial class MainWindowViewModel{
                         Src = SelectedFile,
                         Thumbnail = null,
                         Title = SelectedFile
-                    }
+                    },
+                    Backend = SelectedBackend
                 }
             };
 

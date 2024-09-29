@@ -10,7 +10,19 @@ namespace swengine.desktop.Helpers;
 
 public static class WallpaperHelper
 {
-    public async static Task ApplyWallpaperAsync(Wallpaper wallpaper,  ApplicationStatusWrapper applicationStatusWrapper, GifQuality selectedResolution, string selectedFps, int selectedDuration,bool bestSettings, CancellationToken token, string referrer = null)
+    public async static Task ApplyWallpaperAsync
+    (
+    Wallpaper wallpaper, 
+     ApplicationStatusWrapper applicationStatusWrapper,
+    GifQuality selectedResolution,
+     string selectedFps, 
+    int selectedDuration,
+    bool bestSettings, 
+    string backend,
+    CancellationToken token, 
+    string referrer = null
+    
+    )
     {
         if(wallpaper == null){
             return;
@@ -65,7 +77,8 @@ public static class WallpaperHelper
         /**
         *       Conversion complete begin application
         */
-         await SwwwHelper.ApplyAsync(convertResult);
+        System.Console.WriteLine("at wallpaper helper backend is" + backend);
+         await SwwwHelper.ApplyAsync(convertResult,backend);
          long APPLICATION_TIME = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - CURRENT_TIMESTAMP;
          TimeSpan applicationTimeSpan = TimeSpan.FromSeconds(APPLICATION_TIME);
          string applicationTimeSpanText = "";

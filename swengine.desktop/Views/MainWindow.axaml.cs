@@ -27,6 +27,7 @@ public partial class MainWindow : Window
             DataContext = new ApplyWindowViewModel()
             {
                 BgsProvider = (DataContext as MainWindowViewModel).BgsProvider,
+                Backend = (DataContext as MainWindowViewModel).SelectedBackend,
                 WallpaperResponse = Tag,
                 //pass the current provider so the Apply window knows which provider to query for the wallpaper
                

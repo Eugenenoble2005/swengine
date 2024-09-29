@@ -24,6 +24,8 @@ public partial class ApplyWindowViewModel : ViewModelBase
     
     //MotionBgs service
     public IBgsProvider BgsProvider { get; set; }
+
+    public string Backend {get;set;}
     //Resolution user selected. Defaults to 4k.
     [ObservableProperty] private GifQuality selectedResolution = GifQuality.q2160p;
     
@@ -66,9 +68,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
     //Called when the WallpaperResponse object is set while the window is opening
     public async void ObjectCreated()
     {
-      
          Wallpaper = await BgsProvider.InfoAsync(WallpaperResponse.Src,Title:WallpaperResponse.Title);
-        
         using var media = new Media(_libVlc, new Uri(Wallpaper.Preview));
         MediaPlayer.Play(media);
         MediaPlayer.Volume = 0;
@@ -83,7 +83,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
         {
             Title = "Apply this wallpaper",
             PrimaryButtonText = "Apply",
-            IsPrimaryButtonEnabled = true,
+            IsPrimaryButtonEnabled = true, 
             Content = ApplyDialogContent()
         };
         dialog.Closed += (sender, args) =>
@@ -118,8 +118,22 @@ public partial class ApplyWindowViewModel : ViewModelBase
             {
                 Task.Run(() =>
                 {
-                    WallpaperHelper.ApplyWallpaperAsync(Wallpaper,  ApplicationStatusWrapper, SelectedResolution, SelectedFps,SelectedDuration, BestSettings,
-                        ctx.Token, referrer:WallpaperResponse.Src);
+                    WallpaperHelper.ApplyWallpaperAsync(
+                  wallpaper:  Wallpaper,
+                 
+                   applicationStatusWrapper:  ApplicationStatusWrapper,
+                
+                   selectedResolution:  SelectedResolution,
+                
+                    selectedFps: SelectedFps,
+                    
+                   selectedDuration: SelectedDuration,
+                
+                    bestSettings:  BestSettings,
+                    backend : Backend,
+                    token:  ctx.Token,
+                    
+                    referrer:WallpaperResponse.Src);
                 });
             };
             applicationStatusDialog.Closed += (sender, args) =>

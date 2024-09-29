@@ -5,23 +5,20 @@ using System.Threading.Tasks;
 
 namespace swengine.desktop.Helpers;
 
+/**
+Used for all backends including KDE and GNOME and not just swww
+*/
+
 public static class SwwwHelper
 {
-    public async static Task<bool> ApplyAsync(string file)
+    public async static Task<bool> ApplyAsync(string file,string backend)
+    
     {
         try
         {
             var applyProcess = new Process()
             {
-                StartInfo = new ProcessStartInfo()
-                {
-                    FileName = "swww",
-                    Arguments = $"img \"{file}\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
+                StartInfo = ApplyProcessStartInfo(backend,file)
             };
             applyProcess.OutputDataReceived += (sender, args) => { Debug.WriteLine($"Received Output: {args.Data}"); };
             applyProcess.ErrorDataReceived += (sender, errorArgs) =>
@@ -82,4 +79,23 @@ public static class SwwwHelper
             return false;
         }
     }
+
+    private static ProcessStartInfo ApplyProcessStartInfo(string backend,string file){
+        string filename = null;
+        string arguments = null;
+        switch(backend){
+            case "SWWW":
+                filename = "swww";
+                arguments = $"img \"{file}\" ";
+                break;
+            
+        }
+        System.Console.WriteLine(filename);
+      return new(){
+            FileName = filename,
+            Arguments = arguments,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+     }
 }
