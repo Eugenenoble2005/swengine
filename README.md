@@ -77,9 +77,14 @@ chmod +x ./install.sh && ./install.sh
 You should see the desktop entry.
 
 ### Usage
-<b>NOTE</b>: This tool does not manage the swww daemon. You must configure it appropriately before using this program. You should autostart the daemon for your wayland session on start.
 
-<h3>Example Hyprland Confiuration</h3>
+## WLROOTS COMPOSITORS
+Install swww for your distro. This tool does not manage the swww daemon. You must configure it appropriately before using this program. You should autostart the daemon for your wayland session.
+
+```
+yay -S swww-git
+```
+<h3>Example Hyprland Configuration</h3>
 
 ```
 #start swww daemon on login
@@ -99,6 +104,11 @@ exec swww-daemon --format xrgb &
 exec swww restore
 ```
 Ensure the daemon is running before attempting to use this tool.
+
+## KDE PLASMA AND GNOME
+This tool has out of the box support for Plasma 6+ and GNOME. No additional packages are required including swww. The default wallpaper utility for these desktop environments are used. Simple change the backend drop down to KDE or GNOME and apply a wallpaper. 
+
+<b>NOTE: GNOME DOES NOT HAVE SUPPORT FOR ANIMATED WALLPAPERS BY DEFAULT</b>
 
 
 ### Tips
