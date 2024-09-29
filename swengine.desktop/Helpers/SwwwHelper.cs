@@ -88,6 +88,10 @@ public static class SwwwHelper
                 filename = "swww";
                 arguments = $"img \"{file}\" ";
                 break;
+            case "PLASMA":
+                filename = "plasma-apply-wallpaperimage";
+                arguments = $"\"{file}\"";
+                break;
             
         }
         System.Console.WriteLine(filename);

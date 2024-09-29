@@ -28,7 +28,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public IBgsProvider BgsProvider;
     public string[] Providers => new[] { "Motionbgs.com", "Moewalls.com", "Wallhaven.cc" }; 
-    public string[] Backends => new[] {"SWWW","KDE","GNOME"};
+    public string[] Backends => new[] {"SWWW","PLASMA","GNOME"};
     
     private string _selectedProvider = "Motionbgs.com";
     private string _selectedBackend = "SWWW";
