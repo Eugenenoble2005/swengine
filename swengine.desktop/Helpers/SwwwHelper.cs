@@ -92,6 +92,10 @@ public static class SwwwHelper
                 filename = "plasma-apply-wallpaperimage";
                 arguments = $"\"{file}\"";
                 break;
+            case "GNOME":
+                filename = "gsettings";
+                arguments = $"set org.gnome.desktop.background picture-uri \"{file}\"";
+                break;
             
         }
         System.Console.WriteLine(filename);
