@@ -86,7 +86,7 @@ public static class SwwwHelper
         switch(backend){
             case "SWWW":
                 filename = "swww";
-                arguments = $"img \"{file}\" ";
+                arguments = $"img \"{file}\"";
                 break;
             case "PLASMA":
                 filename = "plasma-apply-wallpaperimage";
@@ -98,12 +98,14 @@ public static class SwwwHelper
                 break;
             
         }
-        System.Console.WriteLine(filename);
+        Console.WriteLine(filename + " "+arguments);
       return new(){
             FileName = filename,
             Arguments = arguments,
             UseShellExecute = false,
-            CreateNoWindow = true
+            CreateNoWindow = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
         };
      }
 }

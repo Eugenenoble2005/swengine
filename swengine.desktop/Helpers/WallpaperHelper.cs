@@ -77,7 +77,7 @@ public static class WallpaperHelper
         /**
         *       Conversion complete begin application
         */
-        System.Console.WriteLine("at wallpaper helper backend is" + backend);
+        
          await SwwwHelper.ApplyAsync(convertResult,backend);
          long APPLICATION_TIME = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - CURRENT_TIMESTAMP;
          TimeSpan applicationTimeSpan = TimeSpan.FromSeconds(APPLICATION_TIME);
