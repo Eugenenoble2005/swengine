@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.Json;
 using Avalonia.Controls;
 using Avalonia.Input;
 using swengine.desktop.Models;
@@ -12,6 +13,20 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        ScrollViewer.ScrollChanged += (object sender, ScrollChangedEventArgs args)=>{
+          var scrollview = sender as ScrollViewer;
+          var scrollHeight = (int) scrollview.Extent.Height - scrollview.Viewport.Height;
+        // > 100 to prevent calling this method when the scrollview is empty
+         if(scrollview.Offset.Y == scrollHeight && scrollHeight > 100 ){
+
+            //append to infinte scroll
+            (DataContext as MainWindowViewModel).AppendToInfinteScroll();
+          }
+          (DataContext as MainWindowViewModel).SearchRun += (s,e)=>{
+                //scroll up when user paginates
+                scrollview.ScrollToHome();
+        };
+        };
     }
 
     private async void OpenApplyWindow(object? sender, TappedEventArgs e)
