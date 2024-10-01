@@ -62,7 +62,7 @@
              </ItemsRepeater.ItemTemplate>
          </ItemsRepeater>
      </ScrollViewer>
-    <TextBlock Grid.Row = "3" IsVisible = "{Binding InfinteScrollLoading}">
+    <TextBlock  VerticalAlignment="Top"  HorizontalAlignment="Center" FontSize="15" IsVisible = "{Binding InfinteScrollLoading}">
       Loading more...    
     </TextBlock>
     </Grid>
