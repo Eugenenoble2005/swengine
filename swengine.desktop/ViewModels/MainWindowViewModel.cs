@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -24,14 +25,20 @@ public partial class MainWindowViewModel : ViewModelBase
         //set provider initially to motionbgs.com
         SetProvider();
         Search();
+        SearchRun += SearchRun;
     }
 
     public IBgsProvider BgsProvider;
     public string[] Providers => new[] { "Motionbgs.com", "Moewalls.com", "Wallhaven.cc" }; 
     public string[] Backends => new[] {"SWWW","PLASMA","GNOME"};
+
+    private bool _appendingToInfinteScroll = false;
     
     private string _selectedProvider = "Motionbgs.com";
     private string _selectedBackend = "SWWW";
+    public event EventHandler<EventArgs> SearchRun;
+
+    private int _infiniteScrollPage = 1;
     public string SelectedProvider
     {
         get => _selectedProvider;
@@ -61,7 +68,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private TextDocument customScriptsContent = new(){
         Text = ""
     };
-    
+    [ObservableProperty] public bool infinteScrollLoading = false;
     // async void GetWallpapers()
     // {
     //     DataLoading = true;
@@ -86,6 +93,9 @@ public partial class MainWindowViewModel : ViewModelBase
             default:
                 break;
         }
+        //changing provider should reset _infinteScrollPage to the current page
+        _infiniteScrollPage = CurrentPage;
+        _appendingToInfinteScroll  = false;
         Search();
     }
     private void SetBackend(){
@@ -101,7 +111,10 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             CurrentPage--;
         }
+        _infiniteScrollPage = CurrentPage;
+        _appendingToInfinteScroll = false;
         Search();
+        SearchRun.Invoke(this, EventArgs.Empty);
     }
     public async void Search()
     {
@@ -115,7 +128,50 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         WallpaperResponses = await BgsProvider.SearchAsync(SearchTerm, CurrentPage);
         DataLoading = false;
+        
     }
 
+public async void AppendToInfinteScroll()
+{
+    try{
+    if(_appendingToInfinteScroll) return;
+    _appendingToInfinteScroll = true;
+        InfinteScrollLoading = true;
 
-}
+        if (SearchTerm.Length == 0)
+        {
+            foreach (var response in await BgsProvider?.LatestAsync(_infiniteScrollPage + 1))
+            {
+                // add new empty search results to the itemsRepeater
+                if (response != null)
+                {
+                    WallpaperResponses.Add(response);
+                }
+            }
+            _infiniteScrollPage++;
+            _appendingToInfinteScroll = false;
+            InfinteScrollLoading = false;
+            return;
+        }
+
+        foreach (var response in await BgsProvider?.SearchAsync(SearchTerm, _infiniteScrollPage + 1))
+        {
+            // add new search results to the itemsRepeater
+            if (response != null)
+            {
+                WallpaperResponses.Add(response);
+            }
+        }
+        _infiniteScrollPage++;
+        InfinteScrollLoading = false;
+        _appendingToInfinteScroll = false;
+        return;
+        }
+        catch{
+            InfinteScrollLoading = false;
+            _appendingToInfinteScroll = false;
+        }
+    }
+  }
+    
+

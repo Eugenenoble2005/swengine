@@ -42,7 +42,7 @@
         <Panel Grid.Row="2" IsVisible="{Binding !WallpaperResponses.Count}">
             <TextBlock Text="NO RESULTS" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"></TextBlock>
         </Panel>
-     <ScrollViewer Grid.Row="2">
+     <ScrollViewer Grid.Row="2" x:Name="ScrollViewer">
          <ItemsRepeater ItemsSource="{Binding WallpaperResponses}"  HorizontalAlignment="Center" Margin="0,-20,0,0">
              <ItemsRepeater.Layout>
                  <UniformGridLayout MinColumnSpacing="20"  />
@@ -62,6 +62,9 @@
              </ItemsRepeater.ItemTemplate>
          </ItemsRepeater>
      </ScrollViewer>
+    <TextBlock Grid.Row = "3" IsVisible = "{Binding InfinteScrollLoading}">
+      Loading more...    
+    </TextBlock>
     </Grid>
  
 </Window>
