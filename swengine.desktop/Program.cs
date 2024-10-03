@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using System;
 using swengine.desktop.Scrapers;
+using System.Threading.Tasks;
 
 namespace swengine.desktop;
 
@@ -10,10 +11,10 @@ sealed class Program
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
     [STAThread]
-    public static void Main(string[] args)
+    public async  static Task  Main(string[] args)
     {
-      //  MotionBgsScraper.SearchAsync("batman", 1);
-      System.Diagnostics.Debug.WriteLine("Hello World");
+       await MyLiveWallpapersScraper.InfoAsync("https://mylivewallpapers.com/games/batman-arkham-origins-live-wallpaper/");
+       return;
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }
