@@ -26,12 +26,13 @@ public static class DownloadHelper
             using var client = new HttpClient();
             using var request = new HttpRequestMessage(HttpMethod.Get, Link);
             Debug.WriteLine(Link);
+            request.Headers.Add(
+              "User-Agent",
+              "Mozilla/5.0 (X11; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0");
             if (NeedsReferrer)
-            {
-    
+            {                 
                 //if provider requires referer
                 request.Headers.Referrer = new Uri(Referer);
-                Debug.WriteLine(Referer);
             }
             using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             using var s = await response.Content.ReadAsStreamAsync();

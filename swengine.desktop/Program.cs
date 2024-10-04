@@ -13,8 +13,6 @@ sealed class Program
     [STAThread]
     public async  static Task  Main(string[] args)
     {
-       await MyLiveWallpapersScraper.InfoAsync("https://mylivewallpapers.com/games/batman-arkham-origins-live-wallpaper/");
-       return;
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }
