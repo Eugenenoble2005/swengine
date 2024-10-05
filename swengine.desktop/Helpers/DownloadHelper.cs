@@ -23,7 +23,10 @@ public static class DownloadHelper
                 if(File.Exists(Link)){
                     return CopyLocalFile(Link);
                 }
-            using var client = new HttpClient();
+
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.AutomaticDecompression = DecompressionMethods.All;
+    		using var client  = new HttpClient(handler);
             using var request = new HttpRequestMessage(HttpMethod.Get, Link);
             Debug.WriteLine(Link);
             request.Headers.Add(

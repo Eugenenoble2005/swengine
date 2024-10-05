@@ -29,7 +29,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     public IBgsProvider BgsProvider;
-    public string[] Providers => new[] { "Motionbgs.com", "Moewalls.com","Mylivewallpapers.com", "Wallhaven.cc" }; 
+    public string[] Providers => new[] { "Motionbgs.com", "Moewalls.com","Mylivewallpapers.com", "Wallhaven.cc" , "Wallpaperscraft.com" }; 
     public string[] Backends => new[] {"SWWW","PLASMA","GNOME"};
 
     private bool _appendingToInfinteScroll = false;
@@ -92,6 +92,9 @@ public partial class MainWindowViewModel : ViewModelBase
                 break;
             case "Mylivewallpapers.com":
                 BgsProvider = new MyLiveWallpapersService();
+                break;
+            case "Wallpaperscraft.com":
+                BgsProvider = new WallpapersCraftService();
                 break;
             default:
                 break;
