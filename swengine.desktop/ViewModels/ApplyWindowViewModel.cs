@@ -68,10 +68,13 @@ public partial class ApplyWindowViewModel : ViewModelBase
     //Called when the WallpaperResponse object is set while the window is opening
     public async void ObjectCreated()
     {
-         Wallpaper = await BgsProvider.InfoAsync(WallpaperResponse.Src,Title:WallpaperResponse.Title);
-        using var media = new Media(_libVlc, new Uri(Wallpaper.Preview));
-        MediaPlayer.Play(media);
-        MediaPlayer.Volume = 0;
+        try{
+          Wallpaper = await BgsProvider.InfoAsync(WallpaperResponse.Src,Title:WallpaperResponse.Title);
+          using var media = new Media(_libVlc, new Uri(Wallpaper.Preview));
+          MediaPlayer.Play(media);
+          MediaPlayer.Volume = 0;
+        }
+        catch{}
     }
 
     //Apply wallpaper. Will be abstracted for Both Live and static wallpaper
