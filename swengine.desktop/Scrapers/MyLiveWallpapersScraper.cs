@@ -75,13 +75,17 @@ public static class MyLiveWallpapersScraper
         string title =
             htmlDoc.DocumentNode.SelectSingleNode("//h1[@class='post-title']")
                 .InnerText;
+        Console.WriteLine(title);
         string preview =
-            htmlDoc.DocumentNode.SelectSingleNode("//source[@type='video/mp4']")
+            htmlDoc.DocumentNode.SelectSingleNode("//source[@type='video/mp4']")?
                 .GetAttributeValue("src", null);
         string sourcefile =
             htmlDoc.DocumentNode
                 .SelectSingleNode("//a[contains(@class,'wpdm-download-link')]")
                 .GetAttributeValue("data-downloadurl", null);
+        Console.WriteLine(title);
+        Console.WriteLine(preview);
+        Console.WriteLine(sourcefile);
         return JsonSerializer.Serialize(
             new Wallpaper()
             {
