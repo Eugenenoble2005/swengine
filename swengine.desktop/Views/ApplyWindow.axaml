@@ -9,7 +9,7 @@
         xmlns:vlc="using:LibVLCSharp.Avalonia"
         WindowStartupLocation="CenterScreen"
         Height="500"
-        
+        Width="700"
         Title="ApplyWindow">
     <Design.DataContext>
         <vm:DesignApplyWindowViewModel/>
