@@ -1,4 +1,4 @@
-dotnet publish --self-contained=true  --output dist
+dotnet publish --output dist
 chmod +x ./dist/swengine.desktop
 chmod +x swengine
 sudo cp  swengine /usr/bin
