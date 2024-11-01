@@ -14,7 +14,7 @@ public static class MyLiveWallpapersScraper
 {
     private static readonly string mlwbase = "https://www.mylivewallpapers.com/";
 
-    public async static Task<string> LatestOrSearchAsync(
+    public async static Task<List<WallpaperResponse>> LatestOrSearchAsync(
         int page = 1, string function = "latest", string query = "")
     {
         string url = function == "latest" ? mlwbase + $"page/{page}"
@@ -54,10 +54,10 @@ public static class MyLiveWallpapersScraper
                 new() { Title = title, Src = src, Thumbnail = img_src });
         }
 
-        return JsonSerializer.Serialize(wallpaper_responses);
+        return wallpaper_responses;
     }
 
-    public static async Task<string> InfoAsync(string query)
+    public static async Task<Wallpaper> InfoAsync(string query)
     {
         HttpClientHandler handler = new HttpClientHandler();
         handler.AutomaticDecompression = DecompressionMethods.All;
@@ -83,21 +83,15 @@ public static class MyLiveWallpapersScraper
             htmlDoc.DocumentNode
                 .SelectSingleNode("//a[contains(@class,'wpdm-download-link')]")
                 .GetAttributeValue("data-downloadurl", null);
-        Console.WriteLine(title);
-        Console.WriteLine(preview);
-        Console.WriteLine(sourcefile);
-        return JsonSerializer.Serialize(
-            new Wallpaper()
-            {
-                Title = title,
-                Resolution = null,
-                WallpaperType = WallpaperType.Live,
-                Preview = preview,
-                SourceFile = sourcefile,
-                NeedsReferrer = false,
-                
-            }
+        return new Wallpaper()
+        {
+            Title = title,
+            Resolution = null,
+            WallpaperType = WallpaperType.Live,
+            Preview = preview,
+            SourceFile = sourcefile,
+            NeedsReferrer = false,
 
-        );
+        };
     }
 }

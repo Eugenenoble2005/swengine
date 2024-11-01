@@ -11,7 +11,7 @@ namespace swengine.desktop.Scrapers;
 public static class MoewallsScraper
 {
     private static readonly string MoewallsBase = "https://www.moewalls.com";
-    public async static Task<string> LatestOrSearchAsync(int Page = 1,string Function = "latest",string Query="")
+    public async static Task<List<WallpaperResponse>> LatestOrSearchAsync(int Page = 1, string Function = "latest", string Query = "")
     {
         string url;
         if (Function == "latest")
@@ -25,7 +25,7 @@ public static class MoewallsScraper
         List<WallpaperResponse> wallpaper_responses = new();
         using (var http = new HttpClient())
         {
-           // string url = MoewallsBase + $"/page/{Page}";
+            // string url = MoewallsBase + $"/page/{Page}";
             var request = await http.GetAsync(url);
             if (request.IsSuccessStatusCode)
             {
@@ -47,17 +47,17 @@ public static class MoewallsScraper
                             Thumbnail = img_src
                         });
                     }
-                   catch{}
+                    catch { }
                 }
 
-                return JsonSerializer.Serialize(wallpaper_responses);
+                return wallpaper_responses;
             }
         }
 
         return default;
     }
 
-    public async static Task<string> InfoAsync(string Query, string Title)
+    public async static Task<Wallpaper> InfoAsync(string Query, string Title)
     {
         using (var http = new HttpClient())
         {
@@ -69,20 +69,18 @@ public static class MoewallsScraper
                 htmlDoc.LoadHtml(response);
                 string source_tag = htmlDoc.DocumentNode.SelectSingleNode("//source[@type='video/mp4']")
                     .GetAttributeValue("src", null);
-                string download = "https://moewalls.com/download.php?video=" +htmlDoc.DocumentNode.SelectSingleNode("//button[@id='moe-download']")
+                string download = "https://moewalls.com/download.php?video=" + htmlDoc.DocumentNode.SelectSingleNode("//button[@id='moe-download']")
                     .GetAttributeValue("data-url", null);
                 string text_xs = "4k";
-                return JsonSerializer.Serialize(
-                    new Wallpaper()
-                    {
-                        Title = Title,
-                        Resolution = text_xs,
-                        Preview = source_tag,
-                        WallpaperType = WallpaperType.Live,
-                        SourceFile = download,
-                        NeedsReferrer = true
-                    }
-                );
+                return new Wallpaper()
+                {
+                    Title = Title,
+                    Resolution = text_xs,
+                    Preview = source_tag,
+                    WallpaperType = WallpaperType.Live,
+                    SourceFile = download,
+                    NeedsReferrer = true
+                };
             }
         }
 

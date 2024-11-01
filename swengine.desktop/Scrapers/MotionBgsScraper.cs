@@ -11,7 +11,7 @@ namespace swengine.desktop.Scrapers;
 public static class MotionBgsScraper
 {
     private static readonly string MotionBgsBase = "https://www.motionbgs.com";
-    public static async Task<string> LatestAsync(int Page)
+    public static async Task<List<WallpaperResponse>> LatestAsync(int Page)
     {
         string url = $"{MotionBgsBase}/hx2/latest/{Page}/";
         using (var http = new HttpClient())
@@ -26,23 +26,23 @@ public static class MotionBgsScraper
                 var a_links = htmlDoc.DocumentNode.SelectNodes("//a");
                 foreach (var aLink in a_links)
                 {
-                    string img_src =  MotionBgsBase+ aLink.SelectSingleNode(".//img").GetAttributeValue("src","");
+                    string img_src = MotionBgsBase + aLink.SelectSingleNode(".//img").GetAttributeValue("src", "");
                     string title = aLink.SelectSingleNode(".//span[@class='ttl']").InnerHtml;
-                    string src = MotionBgsBase +  aLink.GetAttributeValue("href", "");
-                   wallpaper_response.Add(new()
-                   {
-                       Title = title,
-                       Src = src,
-                       Thumbnail = img_src
-                   });
+                    string src = MotionBgsBase + aLink.GetAttributeValue("href", "");
+                    wallpaper_response.Add(new()
+                    {
+                        Title = title,
+                        Src = src,
+                        Thumbnail = img_src
+                    });
                 }
-                return JsonSerializer.Serialize(wallpaper_response);
-            } 
+                return wallpaper_response;
+            }
         }
         return default;
     }
 
-    public static async Task<string> InfoAsync(string Query, string Title)
+    public static async Task<Wallpaper> InfoAsync(string Query, string Title)
     {
         using (var http = new HttpClient())
         {
@@ -53,13 +53,13 @@ public static class MotionBgsScraper
                 HtmlDocument htmlDoc = new HtmlDocument();
                 htmlDoc.LoadHtml(response);
 
-                string source_tag = MotionBgsBase+ htmlDoc.DocumentNode.SelectSingleNode("//source[@type='video/mp4']")
+                string source_tag = MotionBgsBase + htmlDoc.DocumentNode.SelectSingleNode("//source[@type='video/mp4']")
                     .GetAttributeValue("src", null);
                 string text_xs =
                     htmlDoc.DocumentNode.SelectSingleNode("//div[@class='text-xs']").InnerHtml.Split(" ")[0];
                 string download = MotionBgsBase + htmlDoc.DocumentNode.SelectSingleNode("//div[@class='download']")
                     .SelectSingleNode(".//a").GetAttributeValue("href", null);
-                return JsonSerializer.Serialize(
+                return
                     new Wallpaper()
                     {
                         Title = Title,
@@ -67,20 +67,19 @@ public static class MotionBgsScraper
                         Preview = source_tag,
                         WallpaperType = WallpaperType.Live,
                         SourceFile = download
-                    }
-                );
+                    };
             }
         }
 
         return default;
     }
 
-    public static async Task<string> SearchAsync(string Query, int Page)
+    public static async Task<List<WallpaperResponse>> SearchAsync(string Query, int Page)
     {
-    
+
         string url = $"{MotionBgsBase}/search?q={Query}&page={Page}";
         Debug.WriteLine(url);
-        List<WallpaperResponse> result= new();
+        List<WallpaperResponse> result = new();
         using (var http = new HttpClient())
         {
             var request = await http.GetAsync(url);
@@ -94,16 +93,16 @@ public static class MotionBgsScraper
                 {
                     string img_src = MotionBgsBase + alink.SelectSingleNode(".//img").GetAttributeValue("src", null);
                     string title = alink.GetAttributeValue("title", null);
-                    string src =  MotionBgsBase + alink.GetAttributeValue("href",null);
+                    string src = MotionBgsBase + alink.GetAttributeValue("href", null);
                     result.Add(new()
                     {
                         Title = title,
                         Thumbnail = img_src,
                         Src = src,
                     });
-                }
+                };
 
-                return JsonSerializer.Serialize(result);
+                return result;
             }
         }
         return default;

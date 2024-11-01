@@ -12,8 +12,7 @@ public class MotionBgsService : IBgsProvider
     {
         try
         {
-            return JsonSerializer.Deserialize<List<WallpaperResponse>>(
-                    await Scrapers.MotionBgsScraper.LatestAsync(Page));
+            return await Scrapers.MotionBgsScraper.LatestAsync(Page);
         }
         catch
         {
@@ -25,8 +24,8 @@ public class MotionBgsService : IBgsProvider
     {
         try
         {
-            return JsonSerializer.Deserialize<Wallpaper>(
-                await Scrapers.MotionBgsScraper.InfoAsync(Query,Title));
+
+            return await Scrapers.MotionBgsScraper.InfoAsync(Query, Title);
         }
         catch
         {
@@ -38,7 +37,7 @@ public class MotionBgsService : IBgsProvider
     {
         try
         {
-            return JsonSerializer.Deserialize<List<WallpaperResponse>>(await Scrapers.MotionBgsScraper.SearchAsync(Query,Page));
+            return await Scrapers.MotionBgsScraper.SearchAsync(Query, Page);
         }
         catch
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -21,28 +22,33 @@ public partial class ApplyWindowViewModel : ViewModelBase
 {
     //get search results from previous window
     private WallpaperResponse _wallpaperResponse;
-    
+
     //MotionBgs service
     public IBgsProvider BgsProvider { get; set; }
 
-    public string Backend {get;set;}
+    public string Backend { get; set; }
+
     //Resolution user selected. Defaults to 4k.
-    [ObservableProperty] private GifQuality selectedResolution = GifQuality.q2160p;
-    
+    [ObservableProperty]
+    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ApplyWindowViewModel))]
+    private GifQuality selectedResolution = GifQuality.q2160p;
+
     //duration selected by user
     [ObservableProperty] private int selectedDuration = 5;
     //FPS user selected for GIF
     [ObservableProperty] private string selectedFps = "60";
 
     //whether to use the best settings for a particular wallpaper
-    [ObservableProperty] private bool bestSettings = true;
-    
+
+    [ObservableProperty]
+    private bool bestSettings = true;
+
     //Binding that determines if the video in the window is visible. Drawing over NativeControlHost is not very easy in avalonia so we must hide the video whenever we want to display a ContentDialog
     [ObservableProperty] private bool isVideoVisible = true;
-    
+
     //ApplicationStatus as in Status of applying the wallpaper. It is wrapped in a mutable class so it can be passed as a reference to the WallpaperHelper
     [ObservableProperty] private ApplicationStatusWrapper applicationStatusWrapper = new();
-    
+
     //Initialize Native Libvlc client for playing the wallpaper preview
     private readonly LibVLC _libVlc = new LibVLC("--input-repeat=2");
 
@@ -50,31 +56,34 @@ public partial class ApplyWindowViewModel : ViewModelBase
     {
         MediaPlayer = new MediaPlayer(_libVlc);
     }
-    
+
     //Media Player object for libvlc
     public MediaPlayer MediaPlayer { get; }
-    
-    
+
+
     //The wallpaper object that will be gotten from the Bg service after it has obtained information about the wallpaper.
     [ObservableProperty] private Wallpaper wallpaper;
     public WallpaperResponse WallpaperResponse
     {
-        get { return _wallpaperResponse;}
-        set { SetProperty(ref _wallpaperResponse,value);
+        get { return _wallpaperResponse; }
+        set
+        {
+            SetProperty(ref _wallpaperResponse, value);
             ObjectCreated();
         }
     }
-    
+
     //Called when the WallpaperResponse object is set while the window is opening
     public async void ObjectCreated()
     {
-        try{
-          Wallpaper = await BgsProvider.InfoAsync(WallpaperResponse.Src,Title:WallpaperResponse.Title);
-          using var media = new Media(_libVlc, new Uri(Wallpaper.Preview));
-          MediaPlayer.Play(media);
-          MediaPlayer.Volume = 0;
+        try
+        {
+            Wallpaper = await BgsProvider.InfoAsync(WallpaperResponse.Src, Title: WallpaperResponse.Title);
+            using var media = new Media(_libVlc, new Uri(Wallpaper.Preview));
+            MediaPlayer.Play(media);
+            MediaPlayer.Volume = 0;
         }
-        catch{}
+        catch { }
     }
 
     //Apply wallpaper. Will be abstracted for Both Live and static wallpaper
@@ -86,7 +95,7 @@ public partial class ApplyWindowViewModel : ViewModelBase
         {
             Title = "Apply this wallpaper",
             PrimaryButtonText = "Apply",
-            IsPrimaryButtonEnabled = true, 
+            IsPrimaryButtonEnabled = true,
             Content = ApplyDialogContent()
         };
         dialog.Closed += (sender, args) =>
@@ -95,12 +104,12 @@ public partial class ApplyWindowViewModel : ViewModelBase
             IsVideoVisible = true;
         };
         var dialogResponse = await dialog.ShowAsync();
-        
+
         if (dialogResponse == ContentDialogResult.Primary)
         {
             dialog.Hide();
-           await Task.Delay(1000); 
-            IsVideoVisible = false; 
+            await Task.Delay(1000);
+            IsVideoVisible = false;
             var applicationStatusDialog = new ContentDialog()
             {
                 Title = "Applying Wallpaper",
@@ -122,21 +131,21 @@ public partial class ApplyWindowViewModel : ViewModelBase
                 Task.Run(() =>
                 {
                     WallpaperHelper.ApplyWallpaperAsync(
-                  wallpaper:  Wallpaper,
-                 
-                   applicationStatusWrapper:  ApplicationStatusWrapper,
-                
-                   selectedResolution:  SelectedResolution,
-                
+                  wallpaper: Wallpaper,
+
+                   applicationStatusWrapper: ApplicationStatusWrapper,
+
+                   selectedResolution: SelectedResolution,
+
                     selectedFps: SelectedFps,
-                    
+
                    selectedDuration: SelectedDuration,
-                
-                    bestSettings:  BestSettings,
-                    backend : Backend,
-                    token:  ctx.Token,
-                    
-                    referrer:WallpaperResponse.Src);
+
+                    bestSettings: BestSettings,
+                    backend: Backend,
+                    token: ctx.Token,
+
+                    referrer: WallpaperResponse.Src);
                 });
             };
             applicationStatusDialog.Closed += (sender, args) =>
@@ -146,14 +155,14 @@ public partial class ApplyWindowViewModel : ViewModelBase
                 ctx.Cancel();
             };
             await applicationStatusDialog.ShowAsync();
-         
+
 
         }
-      
+
     }
 
     //Content for the content dialog that requests for FPS,resolution, e.t.c
-    
+
 }
 
 public class DesignApplyWindowViewModel : ApplyWindowViewModel
@@ -167,12 +176,14 @@ public class DesignApplyWindowViewModel : ApplyWindowViewModel
             WallpaperType = WallpaperType.Live,
             Resolution = "Resolution\":\"3840x2160"
         };
-        
+
     }
 }
 
 //wrapper class for ApplicationStatus
 public partial class ApplicationStatusWrapper : ObservableObject
 {
-    [ObservableProperty] private string status;
+    [ObservableProperty]
+    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ApplicationStatusWrapper))]
+    private string status;
 }

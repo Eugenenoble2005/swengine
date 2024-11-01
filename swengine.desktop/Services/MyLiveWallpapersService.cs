@@ -10,8 +10,7 @@ public class MyLiveWallpapersService : IBgsProvider
     {
         try
         {
-            return JsonSerializer.Deserialize<Wallpaper>(
-                await Scrapers.MyLiveWallpapersScraper.InfoAsync(Query));
+            return await Scrapers.MyLiveWallpapersScraper.InfoAsync(Query);
         }
         catch
         {
@@ -23,9 +22,8 @@ public class MyLiveWallpapersService : IBgsProvider
     {
         try
         {
-            return JsonSerializer.Deserialize<List<WallpaperResponse>>(
-                await Scrapers.MyLiveWallpapersScraper.LatestOrSearchAsync(
-                    page: Page, function: "latest"));
+            return await Scrapers.MyLiveWallpapersScraper.LatestOrSearchAsync(
+                    page: Page, function: "latest");
         }
         catch
         {
@@ -38,9 +36,8 @@ public class MyLiveWallpapersService : IBgsProvider
     {
         try
         {
-            return JsonSerializer.Deserialize<List<WallpaperResponse>>(
-                await Scrapers.MyLiveWallpapersScraper.LatestOrSearchAsync(
-                    page: Page, function: "search", query: Query));
+            return await Scrapers.MyLiveWallpapersScraper.LatestOrSearchAsync(
+                    page: Page, function: "search", query: Query);
         }
         catch
         {

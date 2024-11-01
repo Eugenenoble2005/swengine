@@ -12,7 +12,7 @@ public class MoewallsService : IBgsProvider
     {
         try
         {
-            return JsonSerializer.Deserialize<List<WallpaperResponse>>(await MoewallsScraper.LatestOrSearchAsync(Page,Function:"latest"));
+            return await MoewallsScraper.LatestOrSearchAsync(Page, Function: "latest");
         }
         catch
         {
@@ -22,15 +22,20 @@ public class MoewallsService : IBgsProvider
 
     public async Task<Wallpaper> InfoAsync(string Query, string Title = "")
     {
-       
-            return JsonSerializer.Deserialize<Wallpaper>(await MoewallsScraper.InfoAsync(Query,Title));
-
+        try
+        {
+            return await MoewallsScraper.InfoAsync(Query, Title);
+        }
+        catch
+        {
+            return default;
+        }
     }
     public async Task<List<WallpaperResponse>> SearchAsync(string Query, int Page = 1)
     {
         try
         {
-            return JsonSerializer.Deserialize<List<WallpaperResponse>>(await MoewallsScraper.LatestOrSearchAsync(Page,Function:"search",Query:Query));
+            return await MoewallsScraper.LatestOrSearchAsync(Page, Function: "search", Query: Query);
         }
         catch
         {

@@ -7,11 +7,10 @@ namespace swengine.desktop.Services;
 public class WallpapersCraftService : IBgsProvider
 {
     public async Task<Wallpaper> InfoAsync(string Query, string Title = "")
-    {        
+    {
         try
         {
-            return JsonSerializer.Deserialize<Wallpaper>(
-                await Scrapers.WallpapersCraftScraper.InfoAsync(Query));
+            return await Scrapers.WallpapersCraftScraper.InfoAsync(Query);
         }
         catch
         {
@@ -21,25 +20,25 @@ public class WallpapersCraftService : IBgsProvider
 
     public async Task<List<WallpaperResponse>> LatestAsync(int Page = 1)
     {
-        
-        try{
 
-            return JsonSerializer.Deserialize<List<WallpaperResponse>>(
-                    await Scrapers.WallpapersCraftScraper.LatestOrSearchAsync(page:Page,function:"latest"));
+        try
+        {
+            return await Scrapers.WallpapersCraftScraper.LatestOrSearchAsync(page: Page, function: "latest");
         }
-        catch{
+        catch
+        {
             return default;
         }
     }
 
     public async Task<List<WallpaperResponse>> SearchAsync(string Query, int Page = 1)
     {
-        try{
-
-            return JsonSerializer.Deserialize<List<WallpaperResponse>>(
-                    await Scrapers.WallpapersCraftScraper.LatestOrSearchAsync(page:Page,function:"search",query:Query));
+        try
+        {
+            return await Scrapers.WallpapersCraftScraper.LatestOrSearchAsync(page: Page, function: "search", query: Query);
         }
-        catch{
+        catch
+        {
             return default;
         }
     }

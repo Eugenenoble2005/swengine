@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
 using Avalonia;
@@ -29,11 +30,11 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     public IBgsProvider BgsProvider;
-    public string[] Providers => new[] { "Motionbgs.com", "Moewalls.com","Mylivewallpapers.com", "Wallhaven.cc" , "Wallpaperscraft.com" }; 
-    public string[] Backends => new[] {"SWWW","PLASMA","GNOME"};
+    public string[] Providers => new[] { "Motionbgs.com", "Moewalls.com", "Mylivewallpapers.com", "Wallhaven.cc", "Wallpaperscraft.com" };
+    public string[] Backends => new[] { "SWWW", "PLASMA", "GNOME" };
 
     private bool _appendingToInfinteScroll = false;
-    
+
     private string _selectedProvider = "Motionbgs.com";
     private string _selectedBackend = "SWWW";
     public event EventHandler<EventArgs> SearchRun;
@@ -48,16 +49,20 @@ public partial class MainWindowViewModel : ViewModelBase
             SetProvider();
         }
     }
-    public string SelectedBackend {
+    public string SelectedBackend
+    {
         get => _selectedBackend;
-        set {
-            SetProperty(ref _selectedBackend,value);
+        set
+        {
+            SetProperty(ref _selectedBackend, value);
             SetBackend();
         }
     }
-    
-   [ObservableProperty] private string searchTerm = "";
-   
+
+    [ObservableProperty]
+    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(MainWindowViewModel))]
+    private string searchTerm = "";
+
     //current page
     [ObservableProperty] private int currentPage = 1;
     [ObservableProperty] private List<WallpaperResponse> wallpaperResponses;
@@ -65,7 +70,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty] private string selectedFile = null;
 
-    [ObservableProperty] private TextDocument customScriptsContent = new(){
+    [ObservableProperty]
+    private TextDocument customScriptsContent = new()
+    {
         Text = ""
     };
     [ObservableProperty] public bool infinteScrollLoading = false;
@@ -85,7 +92,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 break;
             case "Moewalls.com":
                 BgsProvider = new MoewallsService();
-                
+
                 break;
             case "Wallhaven.cc":
                 BgsProvider = new WallHavenService();
@@ -101,11 +108,12 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         //changing provider should reset _infinteScrollPage to the current page
         _infiniteScrollPage = CurrentPage;
-        _appendingToInfinteScroll  = false;
+        _appendingToInfinteScroll = false;
         Search();
     }
-    private void SetBackend(){
-        
+    private void SetBackend()
+    {
+
     }
     public void Paginate(string seek)
     {
@@ -134,50 +142,52 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         WallpaperResponses = await BgsProvider.SearchAsync(SearchTerm, CurrentPage);
         DataLoading = false;
-        
+
     }
 
-public async void AppendToInfinteScroll()
-{
-    try{
-    if(_appendingToInfinteScroll) return;
-    _appendingToInfinteScroll = true;
-        InfinteScrollLoading = true;
-
-        if (SearchTerm.Length == 0)
+    public async void AppendToInfinteScroll()
+    {
+        try
         {
-            foreach (var response in await BgsProvider?.LatestAsync(_infiniteScrollPage + 1))
+            if (_appendingToInfinteScroll) return;
+            _appendingToInfinteScroll = true;
+            InfinteScrollLoading = true;
+
+            if (SearchTerm.Length == 0)
             {
-                // add new empty search results to the itemsRepeater
+                foreach (var response in await BgsProvider?.LatestAsync(_infiniteScrollPage + 1))
+                {
+                    // add new empty search results to the itemsRepeater
+                    if (response != null)
+                    {
+                        WallpaperResponses.Add(response);
+                    }
+                }
+                _infiniteScrollPage++;
+                _appendingToInfinteScroll = false;
+                InfinteScrollLoading = false;
+                return;
+            }
+
+            foreach (var response in await BgsProvider?.SearchAsync(SearchTerm, _infiniteScrollPage + 1))
+            {
+                // add new search results to the itemsRepeater
                 if (response != null)
                 {
                     WallpaperResponses.Add(response);
                 }
             }
             _infiniteScrollPage++;
-            _appendingToInfinteScroll = false;
             InfinteScrollLoading = false;
+            _appendingToInfinteScroll = false;
             return;
         }
-
-        foreach (var response in await BgsProvider?.SearchAsync(SearchTerm, _infiniteScrollPage + 1))
+        catch
         {
-            // add new search results to the itemsRepeater
-            if (response != null)
-            {
-                WallpaperResponses.Add(response);
-            }
-        }
-        _infiniteScrollPage++;
-        InfinteScrollLoading = false;
-        _appendingToInfinteScroll = false;
-        return;
-        }
-        catch{
             InfinteScrollLoading = false;
             _appendingToInfinteScroll = false;
         }
     }
-  }
-    
+}
+
 

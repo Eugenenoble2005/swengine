@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -15,6 +16,7 @@ using swengine.desktop.Helpers;
 using swengine.desktop.Models;
 using swengine.desktop.Services;
 namespace swengine.desktop.ViewModels;
+
 public partial class ApplyWindowViewModel{
   //Content for the content dialog that requests for FPS,resolution, e.t.c
 
