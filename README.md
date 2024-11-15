@@ -116,8 +116,16 @@ This tool has out of the box support for Plasma 6+ and GNOME. No additional pack
 
 <p>Live wallpapers can take a very long time (2+ minutes sometimes) to apply. This is because they need to be downloaded, converted, compressed and cached. This tool gives you the option to select the resolution (360p to 4k), frame rate and duration of these wallpapers. Needless to say, the larger these values , the longer the initial time to apply and the larger the size of the wallpaper.</p>
 
-<p>Currently three providers are scraped(motionbgs.com , moewalls.com and wallhaven.cc) with a combined repo in thousands. You can also chose to upload your own video or image files and set them as your wallpaper immediately. </p>
-
+<p>You can also chose to upload your own video or image files and set them as your wallpaper immediately. </p>
+Available providers at the time of this commit:
+<ul>
+<li> https://www.motionbgs.com</li>
+<li> https://www.moewalls.com</li>
+<li> https://www.mylivewallpapers.com</li>
+<li> https://www.wallhaven.cc</li>
+<li> https://www.wallpaperscraft.com</li>
+<li> https://www.wallpapers-clan.com</li>
+</ul>
 <h3>Scripts</h3>
 <p>Somtimes, you might want to run a script or command when you apply a new wallpaper. Examples of such times may be when you want to generate a new color pallete for your desktop using wallust or pywal or when you want to copy your new wallpaper to a shared location so it can be used by your wayland screen locker. In any case , you can easily add custom commands that will run after swengine changes your wallpaper. 
 
