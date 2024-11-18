@@ -6,23 +6,23 @@ namespace swengine.desktop.Services;
 
 public class WallpapersClanService : IBgsProvider
 {
-  public Task<Wallpaper> InfoAsync(string Query, string Title = "")
+  public async Task<Wallpaper> InfoAsync(string Query, string Title = "")
   {
     try
     {
-      return WallpapersClanScraper.InfoAsync(Query);
+      return await WallpapersClanScraper.InfoAsync(Query);
     }
     catch
     {
       return default;
     }
   }
-  public Task<List<WallpaperResponse>> LatestAsync(int Page = 1)
+  public async Task<List<WallpaperResponse>> LatestAsync(int Page = 1)
   {
     try
     {
 
-      return WallpapersClanScraper.LatestAsync(Page);
+      return await WallpapersClanScraper.LatestAsync(Page);
     }
     catch
     {
@@ -30,12 +30,12 @@ public class WallpapersClanService : IBgsProvider
     }
   }
 
-  public Task<List<WallpaperResponse>> SearchAsync(string Query, int Page = 1)
+  public async Task<List<WallpaperResponse>> SearchAsync(string Query, int Page = 1)
   {
     try
     {
 
-      return WallpapersClanScraper.SearchAsync(Query, Page);
+      return await WallpapersClanScraper.SearchAsync(Query, Page);
     }
     catch
     {
