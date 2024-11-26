@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
+
 using HtmlAgilityPack;
+
 using swengine.desktop.Models;
 
 namespace swengine.desktop.Scrapers;
@@ -44,7 +45,7 @@ public class WallpapersCraftScraper
     }
     public async static Task<Wallpaper> InfoAsync(string query)
     {
-        HttpClientHandler handler = new HttpClientHandler();
+        using HttpClientHandler handler = new HttpClientHandler();
         handler.AutomaticDecompression = DecompressionMethods.All;
         using var http = new HttpClient(handler);
         using var request = await http.GetAsync(query);

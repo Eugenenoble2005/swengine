@@ -71,6 +71,7 @@ public static class WallpaperHelper
         }
         Dispatcher.UIThread.Post(() =>{
                 applicationStatusWrapper.Status  = "Conversion complete. Applying wallpaper. This might take a while depending on the details of your wallpaper...";
+
         });
 
 

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+
 using AvaloniaEdit.Document;
+
 using CommunityToolkit.Mvvm.ComponentModel;
+
 using swengine.desktop.Models;
 using swengine.desktop.Services;
 
@@ -136,26 +139,36 @@ public partial class MainWindowViewModel : ViewModelBase
         DataLoading = false;
 
     }
-
     public async void AppendToInfinteScroll()
     {
+        if (_appendingToInfinteScroll) return;
+
+        _appendingToInfinteScroll = true;
+        InfinteScrollLoading = true;
+
         try
         {
-            if (_appendingToInfinteScroll) return;
-            _appendingToInfinteScroll = true;
-            InfinteScrollLoading = true;
-            var dataSource = SearchTerm.Length == 0 ? await BgsProvider?.LatestAsync(_infiniteScrollPage + 1) : await BgsProvider?.SearchAsync(SearchTerm, _infiniteScrollPage + 1);
-            foreach (var response in dataSource)
+            var responses = SearchTerm.Length == 0
+                ? await BgsProvider?.LatestAsync(_infiniteScrollPage + 1)
+                : await BgsProvider?.SearchAsync(SearchTerm, _infiniteScrollPage + 1);
+
+            if (responses != null)
             {
-                if (response != null)
-                    WallpaperResponses.Add(response);
+                foreach (var response in responses)
+                {
+                    if (response != null)
+                    {
+                        WallpaperResponses.Add(response);
+                    }
+                }
 
                 _infiniteScrollPage++;
-                _appendingToInfinteScroll = false;
-                InfinteScrollLoading = false;
             }
         }
         catch
+        {
+        }
+        finally
         {
             InfinteScrollLoading = false;
             _appendingToInfinteScroll = false;

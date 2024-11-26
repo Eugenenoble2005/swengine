@@ -3,7 +3,9 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+
 using HtmlAgilityPack;
+
 using swengine.desktop.Models;
 
 namespace swengine.desktop.Scrapers;
@@ -108,4 +110,3 @@ public static class MotionBgsScraper
         return default;
     }
 }
-
