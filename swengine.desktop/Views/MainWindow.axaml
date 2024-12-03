@@ -7,7 +7,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="swengine.desktop.Views.MainWindow"
         WindowStartupLocation="CenterScreen"
-        
+       xmlns:local="using:swengine.desktop" 
         xmlns:models="using:swengine.desktop.Models"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -55,7 +55,7 @@
                                  <Setter Property="Background" Value="{DynamicResource SystemAccentColor}"></Setter>
                              </Style>
                          </StackPanel.Styles>
-                         <Image asyncImageLoader:ImageLoader.Source="{Binding Thumbnail}" Height="300" Width="300" VerticalAlignment="Top"></Image>
+                         <asyncImageLoader:AdvancedImage Source="{Binding Thumbnail}" Height="300" Width="300" VerticalAlignment="Top" Loader="{Binding $parent[ItemsRepeater].((vm:MainWindowViewModel)DataContext).BaseLoader}"></asyncImageLoader:AdvancedImage>
                          <TextBlock Text="{Binding Title}" Margin="0,-120,0,0" TextAlignment="Center"></TextBlock>
                      </StackPanel>
                  </DataTemplate>

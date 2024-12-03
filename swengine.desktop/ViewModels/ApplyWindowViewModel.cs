@@ -1,17 +1,17 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
+
 using Avalonia.Data;
-using Avalonia.Threading;
+
 using CommunityToolkit.Mvvm.ComponentModel;
+
 using FluentAvalonia.UI.Controls;
+
 using LibVLCSharp.Shared;
+
 using swengine.desktop.Helpers;
 using swengine.desktop.Models;
 using swengine.desktop.Services;
@@ -91,6 +91,17 @@ public partial class ApplyWindowViewModel : ViewModelBase
     {
         //dialog cannot draw over video, so hide video when dialog is about to display
         IsVideoVisible = false;
+        if (Wallpaper == null)
+        {
+            ContentDialog warningDialog = new()
+            {
+                Title = "Warning",
+                Content = "Wallpaper information is still loading. Please try again",
+                CloseButtonText = "Dismiss"
+            };
+            await warningDialog.ShowAsync();
+            return;
+        }
         ContentDialog dialog = new()
         {
             Title = "Apply this wallpaper",

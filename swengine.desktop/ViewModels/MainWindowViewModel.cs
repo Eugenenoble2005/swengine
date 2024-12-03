@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using AvaloniaEdit.Document;
 
 using CommunityToolkit.Mvvm.ComponentModel;
-
+using AsyncImageLoader.Loaders;
 using swengine.desktop.Models;
 using swengine.desktop.Services;
 
@@ -18,7 +18,8 @@ public partial class MainWindowViewModel : ViewModelBase
         //set provider initially to motionbgs.com
         SetProvider();
         Search();
-        SearchRun += SearchRun;
+        RequestMoveToTop += RequestMoveToTop;
+        RequestClearImageLoader += RequestClearImageLoader;
     }
 
     public IBgsProvider BgsProvider;
@@ -29,7 +30,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private string _selectedProvider = "Motionbgs.com";
     private string _selectedBackend = "SWWW";
-    public event EventHandler<EventArgs> SearchRun;
+    public event EventHandler<EventArgs> RequestMoveToTop;
+    public event EventHandler<EventArgs> RequestClearImageLoader;
+
+    public AsyncImageLoader.Loaders.BaseWebImageLoader BaseLoader => new BaseWebImageLoader();
 
     private int _infiniteScrollPage = 1;
     public string SelectedProvider
@@ -102,8 +106,16 @@ public partial class MainWindowViewModel : ViewModelBase
                 break;
         }
         //changing provider should reset _infinteScrollPage to the current page
+        //
         _infiniteScrollPage = CurrentPage;
         _appendingToInfinteScroll = false;
+        RequestMoveToTop?.Invoke(this, EventArgs.Empty);
+        try
+        {
+            ClearImageLoader();
+        }
+        catch
+        { }
         Search();
     }
     private void SetBackend()
@@ -122,8 +134,9 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         _infiniteScrollPage = CurrentPage;
         _appendingToInfinteScroll = false;
+        ClearImageLoader();
+        RequestMoveToTop.Invoke(this, EventArgs.Empty);
         Search();
-        SearchRun.Invoke(this, EventArgs.Empty);
     }
     public async void Search()
     {
@@ -138,6 +151,10 @@ public partial class MainWindowViewModel : ViewModelBase
         WallpaperResponses = await BgsProvider.SearchAsync(SearchTerm, CurrentPage);
         DataLoading = false;
 
+    }
+    private void ClearImageLoader()
+    {
+        RequestClearImageLoader.Invoke(this, EventArgs.Empty);
     }
     public async void AppendToInfinteScroll()
     {
@@ -161,7 +178,6 @@ public partial class MainWindowViewModel : ViewModelBase
                         WallpaperResponses.Add(response);
                     }
                 }
-
                 _infiniteScrollPage++;
             }
         }

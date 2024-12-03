@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+
 using HtmlAgilityPack;
+
 using swengine.desktop.Models;
 
 namespace swengine.desktop.Scrapers;
@@ -24,7 +26,7 @@ public static class WallHavenScraper
             url = $"{WallHavenBase}/search?q={Query}&categories=110&purity=100&sorting=date_added&order=desc&ai_art_filter=1&page={page}";
         }
         List<WallpaperResponse> responses = new();
-        using var http = new HttpClient();
+        var http = HttpClientProvider.Client;
         using var request = await http.GetAsync(url);
         if (request.IsSuccessStatusCode)
         {
@@ -52,7 +54,7 @@ public static class WallHavenScraper
 
     public static async Task<Wallpaper> InfoAsync(string Query)
     {
-        using var http = new HttpClient();
+        var http = HttpClientProvider.Client;
         using var request = await http.GetAsync(Query);
         if (request.IsSuccessStatusCode)
         {

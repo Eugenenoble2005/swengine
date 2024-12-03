@@ -29,7 +29,7 @@ public partial class MainWindowViewModel{
     };
 
     var result = await uploadDialog.ShowAsync();
-    
+     
     if (result == ContentDialogResult.Primary)
     {
         if (SelectedFile != null)

@@ -9,17 +9,17 @@ public class WallpaperResponse
      * The title of the wallpaper as provided by the provider
      */
     public string? Title { get; set; }
-    
+
     /**
      * The static image preview that will be displayed in searches
      */
     public string? Thumbnail { get; set; }
-    
+
     /**
      * This is the link to the main page of the wallpaper. The page that contains information about the paper including the high quality download link
      */
     public string? Src { get; set; }
-    
+
 }
 public class Wallpaper
 {
@@ -27,22 +27,22 @@ public class Wallpaper
      * Title of the wallpaper, 
      */
     public string? Title { get; set; }
-   
+
     /**
      * MP4 preview of the wallpaper. This is not the source of the wallpaper as it is very low quality. This will be displayed in libvlc so the user knows what the wallpaper looks like before they download it
      */
     public string? Preview { get; set; }
-    
+
     /**
      * Type of the wallpaper, whether Live or static. I initially planned to add providers for static wallpapers. Maybe later on
      */
     public WallpaperType? WallpaperType { get; set; }
-    
+
     /**
      * Link to the high quality mp4 gif file which will be downloaded, converted by ffmpeg to a high quality gif and  applied by the swwww daemon
      */
     public string? SourceFile { get; set; }
-    
+
     /**
      * Resolution of the wallpaper as provider by the provider. Pretty much useless
      */
