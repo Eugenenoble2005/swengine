@@ -99,7 +99,10 @@ public partial class ApplyWindowViewModel : ViewModelBase
                 Content = "Wallpaper information is still loading. Please try again",
                 CloseButtonText = "Dismiss"
             };
+            await Task.Delay(1000);
+            IsVideoVisible = false;
             await warningDialog.ShowAsync();
+            IsVideoVisible = true;
             return;
         }
         ContentDialog dialog = new()

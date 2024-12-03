@@ -43,6 +43,10 @@
             <TextBlock Text="NO RESULTS" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"></TextBlock>
         </Panel>
      <ScrollViewer Grid.Row="2" x:Name="ScrollViewer">
+     <ScrollViewer.Background>
+        <SolidColorBrush Color="Black" Opacity="0.5">
+        </SolidColorBrush>
+     </ScrollViewer.Background>
          <ItemsRepeater ItemsSource="{Binding WallpaperResponses}"  HorizontalAlignment="Center" Margin="0,-20,0,0">
              <ItemsRepeater.Layout>
                  <UniformGridLayout MinColumnSpacing="20"  />
