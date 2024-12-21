@@ -4,9 +4,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-
 using HtmlAgilityPack;
-
 using swengine.desktop.Models;
 
 namespace swengine.desktop.Scrapers;
@@ -20,6 +18,9 @@ public static class WallHavenScraper
         if (Function == "latest")
         {
             url = $"{WallHavenBase}/latest?page={page}";
+        }
+        else if(Function == "random"){
+            url = $"{WallHavenBase}/random?page={page}";
         }
         else
         {

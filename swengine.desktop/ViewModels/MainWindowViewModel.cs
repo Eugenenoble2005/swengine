@@ -23,9 +23,16 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     public IBgsProvider BgsProvider;
-    public string[] Providers => new[] { "Motionbgs.com", "Moewalls.com", "Mylivewallpapers.com", "Wallhaven.cc", "Wallpaperscraft.com", "Wallpapers-clan.com" };
-    public string[] Backends => new[] { "SWWW", "PLASMA", "GNOME" };
+    public string[] Providers => new[] {
+        "Motionbgs.com",
+        "Moewalls.com",
+        "Mylivewallpapers.com",
+        "Wallhaven.cc",
+        "Wallhaven.cc(random)",
+        "Wallpaperscraft.com",
+        "Wallpapers-clan.com" , };
 
+    public string[] Backends => new[] { "SWWW", "PLASMA", "GNOME" };
     private bool _appendingToInfinteScroll = false;
 
     private string _selectedProvider = "Motionbgs.com";
@@ -101,6 +108,9 @@ public partial class MainWindowViewModel : ViewModelBase
                 break;
             case "Wallpapers-clan.com":
                 BgsProvider = new WallpapersClanService();
+                break;
+            case "Wallhaven.cc(random)":
+                BgsProvider = new WallHavenRandomService();
                 break;
             default:
                 break;
