@@ -1,69 +1,50 @@
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
-
 using HtmlAgilityPack;
-
 using swengine.desktop.Models;
 
 namespace swengine.desktop.Scrapers;
 
-public static class MoewallsScraper
-{
-    private static readonly string MoewallsBase = "https://www.moewalls.com";
-    public async static Task<List<WallpaperResponse>> LatestOrSearchAsync(int Page = 1, string Function = "latest", string Query = "")
-    {
+public static class MoewallsScraper {
+    private static readonly string MoewallsBase = "https://moewalls.com";
+    public async static Task<List<WallpaperResponse>>? LatestOrSearchAsync(int Page = 1, string Function = "latest", string Query = "") {
         string url;
-        if (Function == "latest")
-        {
+        if (Function == "latest") {
             url = MoewallsBase + $"/page/{Page}";
-        }
-        else
-        {
+        } else {
             url = MoewallsBase + $"/page/{Page}/?s={Query}";
         }
         List<WallpaperResponse> wallpaper_responses = new();
         var http = HttpClientProvider.Client;
         // string url = MoewallsBase + $"/page/{Page}";
         var request = await http.GetAsync(url);
-        if (request.IsSuccessStatusCode)
-        {
+        if (request.IsSuccessStatusCode) {
             var response = await request.Content.ReadAsStringAsync();
             HtmlDocument htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(response);
             var g1_collection_item = htmlDoc.DocumentNode.SelectNodes("//li[contains(@class,'g1-collection-item')]");
-            foreach (var item in g1_collection_item)
-            {
-                try
-                {
+            foreach (var item in g1_collection_item) {
+                try {
+
                     string img_src = item.SelectSingleNode(".//img").GetAttributeValue("src", null);
                     string title = item.SelectSingleNode(".//a[@class='g1-frame']").GetAttributeValue("title", null);
                     string src = item.SelectSingleNode(".//a[@class='g1-frame']").GetAttributeValue("href", null);
-                    wallpaper_responses.Add(new()
-                    {
+                    wallpaper_responses.Add(new() {
                         Title = title,
                         Src = src,
                         Thumbnail = img_src
                     });
-                }
-                catch { }
-            }
+                } catch { }
 
+            }
             return wallpaper_responses;
         }
-
-
         return default;
     }
-
-    public async static Task<Wallpaper> InfoAsync(string Query, string Title)
-    {
+    public async static Task<Wallpaper> InfoAsync(string Query, string Title) {
         var http = HttpClientProvider.Client;
         var request = await http.GetAsync(Query);
-        if (request.IsSuccessStatusCode)
-        {
+        if (request.IsSuccessStatusCode) {
             string response = await request.Content.ReadAsStringAsync();
             HtmlDocument htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(response);
@@ -72,8 +53,7 @@ public static class MoewallsScraper
             string download = "https://moewalls.com/download.php?video=" + htmlDoc.DocumentNode.SelectSingleNode("//button[@id='moe-download']")
                 .GetAttributeValue("data-url", null);
             string text_xs = "4k";
-            return new Wallpaper()
-            {
+            return new Wallpaper() {
                 Title = Title,
                 Resolution = text_xs,
                 Preview = source_tag,
@@ -82,8 +62,6 @@ public static class MoewallsScraper
                 NeedsReferrer = true
             };
         }
-
-
         return default;
     }
 }
