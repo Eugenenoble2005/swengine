@@ -164,8 +164,6 @@ public partial class ApplyWindowViewModel : ViewModelBase
             };
             applicationStatusDialog.Closed += (sender, args) =>
             {
-                //try to cancel the wallpaper application process. I haven't gotten this quite right yet as it only gets an opportunity to cancel after each step of the application. Will revisit.
-                Debug.WriteLine("Attempting to cancel");
                 ctx.Cancel();
             };
             await applicationStatusDialog.ShowAsync();

@@ -122,6 +122,7 @@ Available providers at the time of this commit:
 <li> https://www.motionbgs.com</li>
 <li> https://www.moewalls.com</li>
 <li> https://www.mylivewallpapers.com</li>
+<li> https://www.desktophut.com</li>
 <li> https://www.wallhaven.cc</li>
 <li> https://www.wallpaperscraft.com</li>
 <li> https://www.wallpapers-clan.com</li>

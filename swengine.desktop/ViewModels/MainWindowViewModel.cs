@@ -24,6 +24,7 @@ public partial class MainWindowViewModel : ViewModelBase {
     public string[] Providers => new[] {
         "Motionbgs.com",
         "Moewalls.com",
+        "Desktophut.com",
         "Mylivewallpapers.com",
         "Wallhaven.cc",
         "Wallhaven.cc(random)",
@@ -104,6 +105,9 @@ public partial class MainWindowViewModel : ViewModelBase {
             case "Wallhaven.cc(random)":
                 BgsProvider = new WallHavenRandomService();
                 break;
+            case "Desktophut.com":
+                BgsProvider = new DesktopHutService();
+                break;
             default:
                 break;
         }
@@ -138,15 +142,15 @@ public partial class MainWindowViewModel : ViewModelBase {
         _searchDebounceToken = new();
         DataLoading = true;
 
-        if(_searchDebounceToken.IsCancellationRequested) return;
+        if (_searchDebounceToken.IsCancellationRequested) return;
         if (SearchTerm.Length == 0) {
             //empty search
-        if(_searchDebounceToken.IsCancellationRequested) return;
+            if (_searchDebounceToken.IsCancellationRequested) return;
             WallpaperResponses = await BgsProvider.LatestAsync(Page: CurrentPage);
             DataLoading = false;
             return;
         }
-        if(_searchDebounceToken.IsCancellationRequested) return;
+        if (_searchDebounceToken.IsCancellationRequested) return;
         WallpaperResponses = await BgsProvider.SearchAsync(SearchTerm, CurrentPage);
         DataLoading = false;
 

@@ -1,6 +1,5 @@
 ﻿using Avalonia;
 using System;
-using swengine.desktop.Scrapers;
 using System.Threading.Tasks;
 
 namespace swengine.desktop;

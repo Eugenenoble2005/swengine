@@ -42,8 +42,7 @@ public static class WallpapersClanScraper
         HttpResponseMessage response = await client.SendAsync(request);
         response.EnsureSuccessStatusCode();
         string responseBody = await response.Content.ReadAsStringAsync();
-        //   System.Console.WriteLine(responseBody);
-
+        
         WallpapersClanJsonResonse jsonResponse = System.Text.Json.JsonSerializer.Deserialize<WallpapersClanJsonResonse>(responseBody, JsonContext.Default.WallpapersClanJsonResonse);
         HtmlDocument htmlDoc = new();
         htmlDoc.LoadHtml(jsonResponse.data);
