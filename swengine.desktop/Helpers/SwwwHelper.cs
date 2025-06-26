@@ -9,22 +9,15 @@ namespace swengine.desktop.Helpers;
 Used for all backends including KDE and GNOME and not just swww
 */
 
-public static class SwwwHelper
-{
-    public async static Task<bool> ApplyAsync(string file,string backend)
-    
-    {
-        try
-        {
-            var applyProcess = new Process()
-            {
-                StartInfo = ApplyProcessStartInfo(backend,file)
+public static class SwwwHelper {
+    public async static Task<bool> ApplyAsync(string file, string backend) {
+        try {
+            var applyProcess = new Process() {
+                StartInfo = ApplyProcessStartInfo(backend, file)
             };
             applyProcess.OutputDataReceived += (sender, args) => { Debug.WriteLine($"Received Output: {args.Data}"); };
-            applyProcess.ErrorDataReceived += (sender, errorArgs) =>
-            {
-                if (errorArgs.Data != null)
-                {
+            applyProcess.ErrorDataReceived += (sender, errorArgs) => {
+                if (errorArgs.Data != null) {
                     Debug.WriteLine($"Received Error: {errorArgs.Data}");
                 }
             };
@@ -35,7 +28,7 @@ public static class SwwwHelper
 
 
             //send notification
-            Process.Start(new ProcessStartInfo(){
+            Process.Start(new ProcessStartInfo() {
                 FileName = "notify-send",
                 Arguments = "\"Wallpaper set succesfully\"",
                 UseShellExecute = false,
@@ -43,50 +36,52 @@ public static class SwwwHelper
             });
 
             //run custom scripts asynchronously, basically a fire and forget
-            if(File.Exists(CustomScriptsHelper.scripts_location)){
-                  Task.Run(()=>{
+            if (File.Exists(CustomScriptsHelper.scripts_location)) {
+                Task.Run(() => {
                     string script_location = CustomScriptsHelper.scripts_location;
                     //export wallpaper variable then run the user's script
                     string command = $"\"{script_location}\" \"\"{file}\"\"";
 
                     //first make script executable
-                    Process.Start(new ProcessStartInfo(){
+                    Process.Start(new ProcessStartInfo() {
                         FileName = "chmod",
                         Arguments = $"+x {script_location}",
                         UseShellExecute = false,
                         CreateNoWindow = true
                     });
 
-                    var scriptProcess = new Process(){
-                        StartInfo = new(){
+                    var scriptProcess = new Process() {
+                        StartInfo = new() {
                             FileName = "/bin/bash",
-                        Arguments = $"-c \"{command}\"",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        CreateNoWindow = true,
+                            Arguments = $"-c \"{command}\"",
+                            UseShellExecute = false,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true,
+                            CreateNoWindow = true,
                         }
                     };
-                
+
                     scriptProcess.Start();
-                 
-                 });
+
+                });
             }
             return true;
-        }
-        catch
-        {
+        } catch {
             return false;
         }
     }
 
-    private static ProcessStartInfo ApplyProcessStartInfo(string backend,string file){
+    private static ProcessStartInfo ApplyProcessStartInfo(string backend, string file) {
         string filename = null;
         string arguments = null;
-        switch(backend){
+        switch (backend) {
             case "SWWW":
                 filename = "swww";
                 arguments = $"img \"{file}\"";
+                break;
+            case "YIN":
+                filename = "yinctl";
+                arguments = $"--img \"{file}\"";
                 break;
             case "PLASMA":
                 filename = "plasma-apply-wallpaperimage";
@@ -96,10 +91,10 @@ public static class SwwwHelper
                 filename = "gsettings";
                 arguments = $"set org.gnome.desktop.background picture-uri \"{file}\"";
                 break;
-            
+
         }
-        Console.WriteLine(filename + " "+arguments);
-      return new(){
+        Console.WriteLine(filename + " " + arguments);
+        return new() {
             FileName = filename,
             Arguments = arguments,
             UseShellExecute = false,
@@ -107,5 +102,5 @@ public static class SwwwHelper
             RedirectStandardOutput = true,
             RedirectStandardError = true
         };
-     }
+    }
 }

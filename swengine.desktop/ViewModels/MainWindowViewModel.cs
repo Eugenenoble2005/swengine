@@ -31,7 +31,7 @@ public partial class MainWindowViewModel : ViewModelBase {
         "Wallpaperscraft.com",
         "Wallpapers-clan.com" , };
 
-    public string[] Backends => new[] { "SWWW", "PLASMA", "GNOME" };
+    public string[] Backends => new[] { "SWWW", "YIN", "PLASMA", "GNOME" };
     private bool _appendingToInfinteScroll = false;
 
     private string _selectedProvider = "Motionbgs.com";
