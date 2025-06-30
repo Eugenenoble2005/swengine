@@ -30,8 +30,8 @@ public static class FfmpegHelper {
             string convertTo = home + "/Pictures/wallpapers/" + file.Split("/").Last().Split(".").First() + ext;
             if (backend == "YIN" && bestSettings == true && Path.GetExtension(file).ToLower() == ".mp4") {
                 string copyTo = home + "/Pictures/wallpapers/" + file.Split("/").Last();
-                File.Delete(file);
                 File.Copy(file, copyTo, true);
+                File.Delete(file);
                 return copyTo;
             }
             //if the user decides to use the best settings, just convert to a gif without applying any filters
