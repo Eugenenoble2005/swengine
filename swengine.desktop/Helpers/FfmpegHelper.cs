@@ -7,35 +7,37 @@ using swengine.desktop.Models;
 
 namespace swengine.desktop.Helpers;
 
-public static class FfmpegHelper
-{
+public static class FfmpegHelper {
     /*
     *ConvertAsync will return the location of the converted file if successful, or null if unsuccesful
     **/
-    public async static Task<string> ConvertAsync(string file, double startAt = 0, double endAt = 5, GifQuality quality = GifQuality.q1080p, int fps = 60, bool bestSettings= false )
-    {
-        try
-        {
-              string home = Environment.GetEnvironmentVariable("HOME");
+    public async static Task<string> ConvertAsync(string file, string backend, double startAt = 0, double endAt = 5, GifQuality quality = GifQuality.q1080p, int fps = 60, bool bestSettings = false) {
+        try {
+            string home = Environment.GetEnvironmentVariable("HOME");
 
             //if file is not a video, dont bother converting. Just return the image.
-            if(Path.GetExtension(file).ToLower() != ".mp4" && Path.GetExtension(file).ToLower() != ".mkv"){
+            if (Path.GetExtension(file).ToLower() != ".mp4" && Path.GetExtension(file).ToLower() != ".mkv") {
                 string copyTo = home + "/Pictures/wallpapers/" + file.Split("/").Last();
-                File.Copy(file,copyTo,true);
-                if(!File.Exists(copyTo))
+                File.Copy(file, copyTo, true);
+                if (!File.Exists(copyTo))
                     return null;
                 File.Delete(file);
                 return copyTo;
             }
-            string convertTo = home + "/Pictures/wallpapers/" + file.Split("/").Last().Split(".").First() + ".gif";
 
-               //if the user decides to use the best settings, just convert to a gif without applying any filters
+            //yin can play mp4s directly , so if we dont need to change resolution or convert, just copy it and return
+            string ext = backend == "YIN" ? ".mp4" : ".gif";
+            string convertTo = home + "/Pictures/wallpapers/" + file.Split("/").Last().Split(".").First() + ext;
+            if (backend == "YIN" && bestSettings == true && Path.GetExtension(file).ToLower() == ".mp4") {
+                string copyTo = home + "/Pictures/wallpapers/" + file.Split("/").Last();
+                File.Delete(file);
+                File.Copy(file, copyTo, true);
+                return copyTo;
+            }
+            //if the user decides to use the best settings, just convert to a gif without applying any filters
             string ffmpegArgs = bestSettings ? $" -i \"{file}\" -y \"{convertTo}\"" : $" -ss {startAt} -t {endAt} -i \"{file}\" -vf \"scale=-1:{QualityParser(quality)}:flags=lanczos,fps={fps}\" -loop 0 -y \"{convertTo}\"";
-    
-            var convertProcess = new Process
-            {
-                StartInfo = new()
-                {
+            var convertProcess = new Process {
+                StartInfo = new() {
                     FileName = "ffmpeg",
                     Arguments = ffmpegArgs,
                     RedirectStandardOutput = true,
@@ -60,25 +62,20 @@ public static class FfmpegHelper
             convertProcess.BeginErrorReadLine();
             convertProcess.WaitForExit();
             //if gif does not exist then conversion failed. Return false
-            if (!File.Exists(convertTo))
-            {
+            if (!File.Exists(convertTo)) {
                 return null;
             }
             //if everything went smoothly, delete the mp4.
-           File.Delete(file);
+            File.Delete(file);
             return convertTo;
-        }
-        catch
-        {
+        } catch {
             return null;
         }
-      
+
     }
 
-    private static string QualityParser(GifQuality quality)
-    {
-        switch (quality)
-        {
+    private static string QualityParser(GifQuality quality) {
+        switch (quality) {
             case GifQuality.q360p:
                 return "360";
                 break;

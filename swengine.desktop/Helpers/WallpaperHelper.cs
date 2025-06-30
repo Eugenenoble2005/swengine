@@ -8,69 +8,62 @@ using swengine.desktop.ViewModels;
 
 namespace swengine.desktop.Helpers;
 
-public static class WallpaperHelper
-{
+public static class WallpaperHelper {
     public async static Task ApplyWallpaperAsync
     (
-    Wallpaper wallpaper, 
+    Wallpaper wallpaper,
      ApplicationStatusWrapper applicationStatusWrapper,
     GifQuality selectedResolution,
-     string selectedFps, 
+     string selectedFps,
     int selectedDuration,
-    bool bestSettings, 
+    bool bestSettings,
     string backend,
-    CancellationToken token, 
+    CancellationToken token,
     string referrer = null
-    
-    )
-    {
-        if(wallpaper == null){
+
+    ) {
+        if (wallpaper == null) {
             return;
         }
         long CURRENT_TIMESTAMP = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         applicationStatusWrapper.Status = "Downloading Wallpaper...";
-        string downloadResult =  await DownloadHelper.DownloadAsync(wallpaper.SourceFile, wallpaper.Title, wallpaper.NeedsReferrer,referrer  );
+        string downloadResult = await DownloadHelper.DownloadAsync(wallpaper.SourceFile, wallpaper.Title, wallpaper.NeedsReferrer, referrer);
         //if download failed, return and notify user.
-        if(downloadResult == null){
-            Dispatcher.UIThread.Post(() =>
-                {
-                    applicationStatusWrapper.Status = "An error occured while dowloading. Please try again.";
+        if (downloadResult == null) {
+            Dispatcher.UIThread.Post(() => {
+                applicationStatusWrapper.Status = "An error occured while dowloading. Please try again.";
             });
             return;
         }
         //if cancelled
-         if (token.IsCancellationRequested)
-        {
+        if (token.IsCancellationRequested) {
             Debug.WriteLine("Cancellation requested");
             return;
         }
-        Dispatcher.UIThread.Post(() =>
-         {
-            applicationStatusWrapper.Status  = "Download complete. Converting Wallpaper...";
+        Dispatcher.UIThread.Post(() => {
+            applicationStatusWrapper.Status = "Download complete. Converting Wallpaper...";
         });
 
         /**
         *       Download complete begin conversion
         */
 
-           //very dangerous with the int.Parse(). Must refine this
-        string convertResult =  await FfmpegHelper.ConvertAsync(downloadResult, 0, selectedDuration,selectedResolution,fps:int.Parse(selectedFps),bestSettings);
+        //very dangerous with the int.Parse(). Must refine this
+        string convertResult = await FfmpegHelper.ConvertAsync(downloadResult, backend, 0, selectedDuration, selectedResolution, fps: int.Parse(selectedFps), bestSettings);
         //if conversion failed, return and notify user
-        if(convertResult == null){
-             Dispatcher.UIThread.Post(() =>
-            {
+        if (convertResult == null) {
+            Dispatcher.UIThread.Post(() => {
                 applicationStatusWrapper.Status = "An error occured while converting. Please try again.";
             });
             return;
         }
         //if canceled
-         if (token.IsCancellationRequested)
-        {
+        if (token.IsCancellationRequested) {
             Debug.WriteLine("Cancellation requested");
             return;
         }
-        Dispatcher.UIThread.Post(() =>{
-                applicationStatusWrapper.Status  = "Conversion complete. Applying wallpaper. This might take a while depending on the details of your wallpaper...";
+        Dispatcher.UIThread.Post(() => {
+            applicationStatusWrapper.Status = "Conversion complete. Applying wallpaper. This might take a while depending on the details of your wallpaper...";
 
         });
 
@@ -78,17 +71,16 @@ public static class WallpaperHelper
         /**
         *       Conversion complete begin application
         */
-        
-         await SwwwHelper.ApplyAsync(convertResult,backend);
-         long APPLICATION_TIME = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - CURRENT_TIMESTAMP;
-         TimeSpan applicationTimeSpan = TimeSpan.FromSeconds(APPLICATION_TIME);
-         string applicationTimeSpanText = "";
-         applicationTimeSpanText = applicationTimeSpan.TotalMinutes > 1 ? $"{applicationTimeSpan.TotalMinutes.ToString("F2")} minute(s)" : $"{applicationTimeSpan.TotalSeconds.ToString("F2")} second(s)";
-        
-        Dispatcher.UIThread.Post(() =>
-        {
-            applicationStatusWrapper.Status  = $"Wallpaper Applied Successfully in {applicationTimeSpanText}";
+
+        await SwwwHelper.ApplyAsync(convertResult, backend);
+        long APPLICATION_TIME = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - CURRENT_TIMESTAMP;
+        TimeSpan applicationTimeSpan = TimeSpan.FromSeconds(APPLICATION_TIME);
+        string applicationTimeSpanText = "";
+        applicationTimeSpanText = applicationTimeSpan.TotalMinutes > 1 ? $"{applicationTimeSpan.TotalMinutes.ToString("F2")} minute(s)" : $"{applicationTimeSpan.TotalSeconds.ToString("F2")} second(s)";
+
+        Dispatcher.UIThread.Post(() => {
+            applicationStatusWrapper.Status = $"Wallpaper Applied Successfully in {applicationTimeSpanText}";
         });
-       
+
     }
 }
